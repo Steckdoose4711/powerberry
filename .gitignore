@@ -1,7 +1,7 @@
 # IDEs
-.vscode/
-.idea/
-.vs/
+**/.vs/
+**/.vscode/*
+!.vscode/launch.json
 
 # Various Altium files
 *.PrjPCBStructure

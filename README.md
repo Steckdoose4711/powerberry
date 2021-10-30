@@ -2,6 +2,20 @@
 
 Measures the current consumption of your house with a Raspberry Pi and visualizes it on a Grafana dashboard.
 
+## Raspberry Pi Development
+
+Simply spin-up all the containers with
+
+    docker-compose up  -d
+
+If you made changes and want to re-build the containers, run
+
+    docker-compose up --build --force-recreate -d
+
+And stop them again with
+
+    docker-compose down
+
 ## Local Development
 
 You can build and run the individual images manually
