@@ -48,3 +48,9 @@ Use "Attach to running container", install the C++ extension, and start coding.
 You can remove the container again with
 
     docker rm -f powerberry-dsp-dev
+
+### Running a local redis server
+
+To quickly test a Redis server, you can run a local server
+
+    docker run -d -p 6379:6379 --name redis redis:6-alpine

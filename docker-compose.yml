@@ -8,6 +8,8 @@ services:
       - ./config:/config:ro
     environment:
       CONFIG_PATH: /config/config.json
+      REDIS_HOST: powerberry-redis
+      REDIS_PORT: 6379
   powerberry-dsp:
     container_name: powerberry-dsp
     build: powerberry-dsp
