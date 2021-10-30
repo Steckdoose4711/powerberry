@@ -1,0 +1,32 @@
+version: "2.4"
+services:
+
+  # the app post-processes the sensor readings
+  powerberry-app:
+    container_name: powerberry-app
+    build:
+      context: ./powerberry-app
+    restart: always
+    volumes:
+      - ./config:/config:ro
+    environment:
+      CONFIG_PATH: /config/config.json
+      REDIS_HOST: powerberry-redis
+
+  # the dsp reads the hardware sensor
+  powerberry-dsp:
+    container_name: powerberry-dsp
+    build:
+      context: ./powerberry-dsp
+      target: prod
+    restart: always
+    volumes:
+      - ./config:/config:ro
+
+  # redis is used as an in-memory store between the two
+  powerberry-redis:
+    container_name: powerberry-redis
+    image: redis:6-alpine
+    restart: always
+    command: |
+      --save "" --appendonly no

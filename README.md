@@ -1,56 +1,30 @@
-# PowerBerry
+# 🔌🍇 PowerBerry 
 
 Measures the current consumption of your house with a Raspberry Pi and visualizes it on a Grafana dashboard.
 
-## Raspberry Pi Development
+## 🍓 Raspberry Pi Deployment
 
-Simply spin-up all the containers with
+Let compose do the work
 
-    docker-compose up  -d
+    docker-compose -f docker-compose.prod.yml up -d --build
 
-If you made changes and want to re-build the containers, run
+Check the logs with
 
-    docker-compose up --build --force-recreate -d
+    docker-compose logs -f
 
-And stop them again with
+Undeploy all containers with
 
     docker-compose down
 
-## Local Development
+## 👩‍💻 Local Development
 
-You can build and run the individual images manually
+Likewise, let compose bootstrap a development environment
 
-    cd ./powerberry-app
-    docker build -t powerberry-app .
+    docker-compose up -d --build
 
-    cd ./powerberry-dsp
-    docker build -t powerberry-dsp .
+This will [bind-mount](https://docs.docker.com/storage/bind-mounts/) `./powerberry-app` and `./powerberry-dsp` into the respective containers.  
+Moreover, a DSP container with a C++ toolchain is used without the app being compiled and run yet.
 
-Run the individual images
-
-    docker run -it -d --name powerberry-app powerberry-app
-    docker run -it -d --name powerberry-dsp powerberry-dsp
-
-### Attaching to the dev container
-
-For the DSP you can attach to the dev container (replace `$APP_PATH` with the path to `powerberry-dsp`)
-
-    cd ./powerberry-dsp
-    docker build -t powerberry-dsp-dev -f Dockerfile.dev .
-    docker run -it -d --name powerberry-dsp-dev -v $APP_PATH:/app powerberry-dsp-dev
-
-On Windows, you can use the following command from the repository root
-
-    docker run -it -d --name powerberry-dsp-dev -v %cd%\powerberry-dsp:/app powerberry-dsp-dev
-
-Use "Attach to running container", install the C++ extension, and start coding.
-
-You can remove the container again with
-
-    docker rm -f powerberry-dsp-dev
-
-### Running a local redis server
-
-To quickly test a Redis server, you can run a local server
-
-    docker run -d -p 6379:6379 --name redis redis:6-alpine
+- Use the [Remote Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension to attach to one of the running containers
+- Install the [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) or [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) extension once attached to the container
+- Use the existing `launch.json` configurations to run and debug the apps

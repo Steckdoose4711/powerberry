@@ -1,16 +1,21 @@
-FROM gcc:11 AS builder
-
+FROM gcc:11.2 AS dev
 WORKDIR /app
+VOLUME /app
+
+RUN apt-get update && \
+    apt-get install -y gdb
 
 COPY src src/
 COPY Makefile .
 
 RUN make
 
-FROM ubuntu:21.10
+# wait forever, but respond to stop signals in dev mode
+CMD [ "/bin/sh", "-c", "trap : TERM INT; sleep infinity & wait" ]
 
+FROM debian:stable-slim AS prod
 WORKDIR /app
 
-COPY --from=builder /app/bin/powerberry-dsp .
+COPY --from=dev /app/bin/powerberry-dsp .
 
-CMD ["./powerberry-dsp"]
+CMD [ "./powerberry-dsp" ]

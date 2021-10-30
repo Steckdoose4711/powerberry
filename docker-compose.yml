@@ -1,25 +1,24 @@
-version: "3"
+version: "2.4"
 services:
   powerberry-app:
-    container_name: powerberry-app
-    build: powerberry-app
-    restart: 'always'
+    extends:
+      file: docker-compose.prod.yml
+      service: powerberry-app
     volumes:
-      - ./config:/config:ro
-    environment:
-      CONFIG_PATH: /config/config.json
-      REDIS_HOST: powerberry-redis
-      REDIS_PORT: 6379
+      - ./powerberry-app:/app
+
+  # for dev, we use the container with sdk tools and bind mounts
   powerberry-dsp:
-    container_name: powerberry-dsp
-    build: powerberry-dsp
-    restart: 'no'
+    extends:
+      file: docker-compose.prod.yml
+      service: powerberry-dsp
+    build:
+      context: ./powerberry-dsp
+      target: dev
     volumes:
-      - ./config:/config:ro
+      - ./powerberry-dsp:/app
+
   powerberry-redis:
-    container_name: powerberry-redis
-    image: redis:6-alpine
-    restart: 'always'
-    # use redis as a pure in-memory store
-    command: |
-      --save "" --appendonly no
+    extends:
+      file: docker-compose.prod.yml
+      service: powerberry-redis
