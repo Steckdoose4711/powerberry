@@ -1,3 +1,8 @@
+# IDEs
+.vscode/
+.idea/
+.vs/
+
 # Various Altium files
 *.PrjPCBStructure
 *.SchDocPreview
