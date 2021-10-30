@@ -1,0 +1,2 @@
+# keep LF line endings for the Makefile
+Makefile text eol=lf
