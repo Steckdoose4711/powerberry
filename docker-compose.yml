@@ -6,6 +6,8 @@ services:
     restart: 'always'
     volumes:
       - ./config:/config:ro
+    environment:
+      CONFIG_PATH: /config/config.json
   powerberry-dsp:
     container_name: powerberry-dsp
     build: powerberry-dsp
@@ -16,3 +18,6 @@ services:
     container_name: powerberry-redis
     image: redis:6-alpine
     restart: 'always'
+    # use redis as a pure in-memory store
+    command: |
+      --save "" --appendonly no
