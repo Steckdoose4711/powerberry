@@ -1,6 +1,8 @@
 FROM gcc:11.2 AS dev
 WORKDIR /app
-VOLUME /app
+
+# don't make this a volume to avoid https://github.com/moby/moby/issues/37965
+# VOLUME /app
 
 RUN apt-get update && \
     apt-get install -y gdb
