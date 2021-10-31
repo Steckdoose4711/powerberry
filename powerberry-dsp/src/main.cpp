@@ -11,10 +11,17 @@ int main()
     adc_interface * test = new adc_dummy();
 
     size_t const testchannel = 4;
+
+    test->Init(0);
+
     while(true)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        cout << test->read_voltage(testchannel) << endl;
+        for(int i = 0; i < 100; i++)
+        {
+            test->read_voltage(testchannel);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(10000));
     }
 
     return 0;
