@@ -1,0 +1,2 @@
+# mark notebooks as documentation
+*.ipynb linguist-documentation=true
