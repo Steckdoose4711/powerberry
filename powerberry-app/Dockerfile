@@ -11,6 +11,9 @@ RUN if [ $(arch | cut -c 1-3) = "arm" ] ; then \
         echo "[global]\nextra-index-url=https://www.piwheels.org/simple" >> /etc/pip.conf ; \
     fi
 
+# do not buffer stdout so that we get live logs
+ENV PYTHONUNBUFFERED 1
+
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 

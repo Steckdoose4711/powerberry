@@ -1,5 +1,6 @@
 import os
 import sys
+import signal
 
 from pathlib import Path
 
@@ -21,6 +22,8 @@ def get_env(key, default=None):
 
 
 if __name__ == "__main__":
+    # kill this app gracefully if we receive a SIGTERM from Docker
+    signal.signal(signal.SIGTERM, lambda s, f: sys.exit(0))
 
     # get the path to the config file
     config_path = get_env("CONFIG_PATH", default="/config/config.json")

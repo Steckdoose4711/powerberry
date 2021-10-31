@@ -20,6 +20,7 @@ services:
       context: ./powerberry-dsp
       target: prod
     restart: always
+    init: true
     volumes:
       - ./config:/config:ro
 
