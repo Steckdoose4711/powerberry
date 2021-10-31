@@ -51,6 +51,7 @@ float adc_dummy::read_voltage(size_t const channel)
     // at first, we have to get the time for the current periode of the sinewave
     size_t time_in_this_periode = get_time_in_current_periode();
 
+    //TODO: index calculation is not correct at the moment
     // get the value of the sinewave at this certain sample point
     size_t index = (nr_samples / sine_wave_frequency) * time_in_this_periode;
     
