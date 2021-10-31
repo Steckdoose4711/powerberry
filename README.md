@@ -12,7 +12,7 @@ Undeploy all containers with
 
     docker-compose down
 
-### Troubleshooting
+### 💥 Troubleshooting
 
 Check the logs with
 
@@ -32,3 +32,7 @@ Moreover, a DSP container with a C++ toolchain is used without the app being com
 - Use the [Remote Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension to attach to one of the running containers
 - Install the [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) or [C/C++](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) extension once attached to the container
 - Use the existing `launch.json` configurations to run and debug the apps
+
+### 📃 Development Notes
+
+Read [REDIS.md](REDIS.md) to learn more about the cache data structure.
