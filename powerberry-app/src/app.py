@@ -15,7 +15,9 @@ class App:
 
     def run(self):
         log.info("powerberry app started")
+        self.cache.init_synthetic()
         while True:
+            self.cache.push_synthetic()
             sleep(1)
 
     def read_voltages(self) -> np.ndarray:
