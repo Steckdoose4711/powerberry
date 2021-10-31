@@ -8,13 +8,17 @@ Let compose do the work
 
     docker-compose -f docker-compose.prod.yml up -d --build
 
+Undeploy all containers with
+
+    docker-compose down
+
+### Troubleshooting
+
 Check the logs with
 
     docker-compose logs -f
 
-Undeploy all containers with
-
-    docker-compose down
+If you encounter errors like `PermissionError: [Errno 1] Operation not permitted` on Raspbian Buster, read [this comment](https://github.com/Steckdoose4711/powerberry/issues/13#issuecomment-955240891).
 
 ## 👩‍💻 Local Development
 
