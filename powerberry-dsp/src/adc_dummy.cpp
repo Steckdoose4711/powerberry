@@ -17,7 +17,7 @@
     static double max_amplitude = 0.5;
     static size_t sine_wave_frequency = 50;
 
-int adc_dummy::Init(size_t const chip_select)
+int adc_dummy::init(size_t const chip_select)
 {
     // calculating an ideal sine wave with a resolution of 
 
@@ -39,7 +39,6 @@ int adc_dummy::Init(size_t const chip_select)
 
 float adc_dummy::read_voltage(size_t const channel)
 {
-
     // at first, we have to get the time for the current periode of the sinewave
     size_t time_in_this_periode = get_time_in_current_periode();
 

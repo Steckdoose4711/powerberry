@@ -12,7 +12,7 @@ int main()
 
     size_t const testchannel = 4;
 
-    test->Init(0);
+    test->init(0);
 
     while(true)
     {
