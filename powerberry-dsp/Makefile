@@ -1,5 +1,5 @@
 
-Files= ./src/main.cpp ./src/adc_dummy.cpp
+Files= ./src/*cpp
 ./bin/powerberry-dsp: 
 	mkdir -p bin
 	g++ -o ./bin/powerberry-dsp $(Files)
