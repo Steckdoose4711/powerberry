@@ -37,7 +37,7 @@ class Config:
         if key in source:
             value = source[key]
         elif default is not None:
-            log.info(f"{source_name} '{key}' not set, using default '{default}'")
+            log.debug(f"{source_name} '{key}' not set, using default '{default}'")
             value = default
         else:
             log.error(f"required {source_name} '{key}' not set ")
@@ -53,7 +53,7 @@ class Config:
     def _read_config(self, config_path):
         with open(config_path, "r") as f:
             jzon = json.load(f)
-            log.info(f"config file '{config_path}' loaded: {jzon}")
+            log.debug(f"config file '{config_path}' loaded: {jzon}")
             return jzon
 
     def __getattr__(self, name: str):

@@ -1,4 +1,4 @@
-FROM gcc:11.2 AS dev
+FROM gcc:10.3-buster AS dev
 WORKDIR /app
 
 # don't make this a volume to avoid https://github.com/moby/moby/issues/37965
@@ -15,7 +15,7 @@ RUN make
 # wait forever, but respond to stop signals in dev mode
 CMD [ "/bin/sh", "-c", "trap : TERM INT; sleep infinity & wait" ]
 
-FROM debian:stable-slim AS prod
+FROM debian:buster-slim AS prod
 WORKDIR /app
 
 COPY --from=dev /app/bin/powerberry-dsp .

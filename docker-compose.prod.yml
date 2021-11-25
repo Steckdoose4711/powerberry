@@ -27,7 +27,7 @@ services:
   # redis is used as an in-memory store between the two
   powerberry-redis:
     container_name: powerberry-redis
-    image: redis:6-alpine
+    image: redis:6.2-alpine
     restart: always
     command: |
       --save "" --appendonly no

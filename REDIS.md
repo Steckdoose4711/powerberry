@@ -29,7 +29,7 @@ Push multiple measurements with [LPUSH](https://redis.io/commands/lpush) and tru
 Store or retrive the active sample rate with [SET](https://redis.io/commands/set) and [GET](https://redis.io/commands/get)
 
     SET device:0:channel:0:sample_rate 100
-    GET device:0:channel:0:sample_rate 100
+    GET device:0:channel:0:sample_rate
 
 Pop multiple measurements with [RPOP](https://redis.io/commands/rpop)
 
