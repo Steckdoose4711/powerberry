@@ -18,11 +18,15 @@ int main()
     {
         for(int i = 0; i < 100; i++)
         {
-            test->read_voltage(testchannel);
+            auto sample_point = test->read_voltage(testchannel);
+            std::cout << "sample point: " << sample_point << std::endl;
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(10000));
     }
+
+    
+
 
     return 0;
 }
