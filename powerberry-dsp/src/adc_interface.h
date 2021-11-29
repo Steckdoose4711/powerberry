@@ -26,7 +26,7 @@ class adc_interface
          * @param chip_select sets the GPIO Pin, which is used for the Chip select of the ADC.
          * @return errorcode (0) at success (-1) at failure
          */
-        virtual int Init(size_t const chip_select) = 0;
+        virtual int init(size_t const chip_select) = 0;
 
         /**
          * Read voltages from a specific ADC Channel .

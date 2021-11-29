@@ -22,7 +22,7 @@ class adc_dummy : public adc_interface
          * @param chip_select sets the GPIO Pin, which is used for the Chip select of the ADC.
          * @return errorcode (0) at success (-1) at failure
          */
-        int Init(size_t const chip_select);
+        int init(size_t const chip_select);
 
         /**
          * Read voltages from a specific ADC Channel .

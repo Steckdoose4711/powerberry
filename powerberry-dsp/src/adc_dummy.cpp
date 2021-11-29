@@ -17,7 +17,7 @@
     static double max_amplitude = 0.5;
     static size_t sine_wave_frequency = 50;
 
-int adc_dummy::Init(size_t const chip_select)
+int adc_dummy::init(size_t const chip_select)
 {
     // calculating an ideal sine wave with a resolution of 
 
@@ -30,14 +30,6 @@ int adc_dummy::Init(size_t const chip_select)
         current_time_radiant += ((2 * M_PI) / nr_samples);
     }
 
-    // Print the values for the sinewave
-    /*
-    for(auto it = m_sine_wave.begin(); it != m_sine_wave.end(); it++)
-    {
-        std::cout << *it << std::endl;
-    }
-    */
-
    // get current cpu tick timestamp to simulate the "oscillating" sine wave when reading from it
    m_start = std::chrono::steady_clock::now();
     return 0;
@@ -47,23 +39,21 @@ int adc_dummy::Init(size_t const chip_select)
 
 float adc_dummy::read_voltage(size_t const channel)
 {
-
     // at first, we have to get the time for the current periode of the sinewave
     size_t time_in_this_periode = get_time_in_current_periode();
 
-    //TODO: index calculation is not correct at the moment
-    // get the value of the sinewave at this certain sample point
-    size_t index = (nr_samples / sine_wave_frequency) * time_in_this_periode;
+    double duration_periode = (1.0 / sine_wave_frequency * 1.0) * 1000;
+    size_t index = (nr_samples / duration_periode) * time_in_this_periode;
     
     // now we know the sample point of the sine wave for the current time
     double sample_point = m_sine_wave[index];
 
-    std::cout << "time: " << time_in_this_periode << std::endl;
-    std::cout << "index: " << index << std::endl;
-    std::cout << "original sample point: " << sample_point << std::endl;
+    //std::cout << "time: " << time_in_this_periode << std::endl;
+    //std::cout << "index: " << index << std::endl;
+    //std::cout << "original sample point: " << sample_point << std::endl;
     // now we add a noise to the sampled adc value to simulate measurement inaccuracy
     add_noise_to_sample(sample_point);
-    std::cout << "noisy sample point: " << sample_point << std::endl;
+    //std::cout << "noisy sample point: " << sample_point << std::endl;
 
     return sample_point;
 }
