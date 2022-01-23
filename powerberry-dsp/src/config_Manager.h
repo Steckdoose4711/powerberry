@@ -13,9 +13,12 @@ class config_Manager
 {
     public:
     void readConfig(std::string const &path);
+    void readConfig();
     
 
     private:
-    nlohmann::json j;
+
+    nlohmann::json m_config;
+    std::string m_path_to_config;
 
 };
