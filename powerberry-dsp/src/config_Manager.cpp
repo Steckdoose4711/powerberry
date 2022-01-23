@@ -40,8 +40,6 @@ void config_Manager::readConfig(std::string const &path)
     {
         refreshConfig(m_path_to_config, m_config);
     }
-
-
 }
 
 void read_config_initialiy(std::string const & path, nlohmann::json & config)
