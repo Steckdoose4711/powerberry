@@ -2,11 +2,18 @@
 #include <chrono>
 #include <thread>
 #include "adc_dummy.h"
+#include <sw/redis++/redis++.h>
 
 using namespace std;
+using namespace sw::redis;
 
 int main()
 {
+
+    // test redis client
+    auto redis = Redis("tcp://localhost:6379");
+
+
     adc_interface * test = new adc_dummy();
 
     size_t const testchannel = 4;
