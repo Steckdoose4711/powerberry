@@ -6,10 +6,14 @@
       "command": "/usr/local/bin/g++",
       "args": [
         "-g",
+        "-std=c++17",
         "-Wall",
         "${workspaceFolder}/src/*.cpp",
         "-o",
-        "${workspaceFolder}/bin/powerberry-dsp"
+        "${workspaceFolder}/bin/powerberry-dsp",
+        "/app/lib/redis-plus-plus/build/libredis++.a",
+        "/app/lib/hiredis/libhiredis.a",
+        "-pthread"
       ],
       "problemMatcher": ["$gcc"],
       "group": {
