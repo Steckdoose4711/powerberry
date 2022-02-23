@@ -15,7 +15,7 @@ class App:
         self.cache = Cache(config.redis_host, config.redis_port)
 
     def run(self):
-        self.cache.push_synthetic_data()
+        # self.cache.push_synthetic_data()
         devices = self._query_devices()
 
         while True:
