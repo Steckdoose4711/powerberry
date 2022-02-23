@@ -11,8 +11,14 @@ int main()
 {
 
     // test redis client
-    auto redis = Redis("tcp://localhost:6379");
+    auto redis = Redis("tcp://powerberry-redis:6379");
 
+    redis.sadd("devices", "0");
+
+
+    redis.sadd("device:0:channels", "0");
+
+    redis.set("device:0:channel:0:sample_rate", "100");
 
     adc_interface * test = new adc_dummy();
 
@@ -20,15 +26,23 @@ int main()
 
     test->init(0);
 
+
     while(true)
     {
         for(int i = 0; i < 100; i++)
         {
+            std::ostringstream ss;
             auto sample_point = test->read_voltage(testchannel);
-            std::cout << "sample point: " << sample_point << std::endl;
+            ss << sample_point;
+            redis.lpush("device:0:channel:0:current", ss.str());
+
+            //std::cout << "sample point: " << sample_point << std::endl;
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+        redis.ltrim("device:0:channel:0:current", 0, 10000);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        auto len = redis.llen("device:0:channel:0:current");
+        cout << len<< std::endl;
     }
 
 
