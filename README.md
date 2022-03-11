@@ -1,8 +1,9 @@
 # 🔌🍇 PowerBerry 
 
+:construction_worker: This Project is under construction at the moment. Releases will be done soon
+
 Measures the current consumption of your house with a Raspberry Pi and visualizes it on a Grafana dashboard.
 
-## :construction_worker: This repo is under construction at the moment. Releases will be done in the future
 
 ## 🍓 Raspberry Pi Deployment
 
