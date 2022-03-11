@@ -9,11 +9,23 @@
 #include <iostream>
 #include <fstream>
 
-// at the first run, read the complete file
-void read_config_initialiy(std::string const & path, nlohmann::json & config);
 
-// at the second and all other run, only refresh the changeable values
-void refreshConfig(std::string const & path, nlohmann::json & config);
+
+/**
+* at the first run, read the complete file
+* @param path pth to the config file
+* @param config file is a json file
+* @return NONE
+*/
+static void read_config_initialiy(std::string const & path, nlohmann::json & config);
+
+/**
+* at the second and all other run, only refresh the changeable values
+* @param path pth to the config file
+* @param config file is a json file
+* @return NONE
+*/
+static void refreshConfig(std::string const & path, nlohmann::json & config);
 
 
 // refresh config
@@ -21,8 +33,8 @@ void config_Manager::readConfig()
 {
     if(m_path_to_config.empty())
     {
-        std::cout << "No path to config file given. Using default path." << std::endl;
-        m_path_to_config = "./config.json";
+        std::cerr << "No path to config file given. Please call readConfig(path)" << std::endl;
+        return;
     }
     readConfig(m_path_to_config);
 }
@@ -30,7 +42,7 @@ void config_Manager::readConfig()
 // read config initialy from file or refresh config
 void config_Manager::readConfig(std::string const &path)
 {
-    // test json library
+    // set path and red config
     if(m_path_to_config.empty())
     {
         m_path_to_config = path;
@@ -42,7 +54,7 @@ void config_Manager::readConfig(std::string const &path)
     }
 }
 
-void read_config_initialiy(std::string const & path, nlohmann::json & config)
+static void read_config_initialiy(std::string const & path, nlohmann::json & config)
 {
     try
     {
@@ -54,19 +66,19 @@ void read_config_initialiy(std::string const & path, nlohmann::json & config)
         }
         else
         {
-            std::cout << "Could not open config file." << std::endl;
+            std::cerr << "Could not open config file." << std::endl;
         }
     }
     catch(std::exception const &e)
     {
-        std::cout << "Error while reading config file: " << e.what() << std::endl;
+        std::cerr << "Error while serializing config file: " << e.what() << std::endl;
     }
 }
 
 
-void refreshConfig(std::string const & path, nlohmann::json & config)
+static void refreshConfig(std::string const & path, nlohmann::json & config)
 {
-        try
+    try
     {
         // open config file and serialize it to the configuration
         std::ifstream configstream (path);
