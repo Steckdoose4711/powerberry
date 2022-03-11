@@ -3,24 +3,48 @@
 #include <thread>
 #include "adc_dummy.h"
 #include <sw/redis++/redis++.h>
+#include <config_Manager.h>
 
 using namespace std;
 using namespace sw::redis;
 
 
-        /**
-         * Do only call this method for testing purposes.
-         * Function generates sinusoidal values and pushes them to redis
-         * @param NONE
-         * @return NONE
-         */
+/**
+    * Do only call this method for testing purposes.
+    * Function generates sinusoidal values and pushes them to redis
+    * @param NONE
+    * @return NONE
+*/
 static void Test_DSP();
 
-int main()
+
+/**
+    * Main function
+    * @param arg[0] = path to app (implicit parameter)
+    *        arg[1] = path to config file (optional)
+    * @return NONE
+*/
+int main(int argc, char *argv[])
 {
 
-    
+    std::string config_file_path = "/srv/powerberry/config.json";
+    if(argc > 1)
+    {
+        config_file_path = argv[1];
+    }
+
+    // read json config file
+    config_Manager json_config;
+    json_config.readConfig(config_file_path);
+
     Test_DSP();
+
+    while(true)
+    {
+
+    }
+
+
 
     return 0;
 }
@@ -33,7 +57,6 @@ static void Test_DSP()
     auto redis = Redis("tcp://powerberry-redis:6379");
 
     redis.sadd("devices", "0");
-
 
     redis.sadd("device:0:channels", "0");
 
