@@ -3,20 +3,32 @@
 #include <thread>
 #include "adc_dummy.h"
 #include <sw/redis++/redis++.h>
-#include <config_Manager.h>
+#include "config_Manager.h"
 
 using namespace std;
 using namespace sw::redis;
 
+#define RELEASE_VERSION 1
 
+#if RELEASE_VERSION == 0
 /**
     * Do only call this method for testing purposes.
     * Function generates sinusoidal values and pushes them to redis
     * @param NONE
     * @return NONE
 */
-static void Test_DSP();
+static void DSP_Test();
+#endif
 
+#if RELEASE_VERSION == 1
+/**
+    * Do call this function in release version of DSP application.
+    * Function reads Values from ADC and deploys them to redis.
+    * @param inout args from main program
+    * @return NONE
+*/
+static void DSP_Deploy(int argc, char *argv[]);
+#endif
 
 /**
     * Main function
@@ -27,6 +39,22 @@ static void Test_DSP();
 int main(int argc, char *argv[])
 {
 
+    #if (RELEASE_VERSION == 1)
+        DSP_Deploy(argc, argv);
+    #else
+        DSP_Test();
+    #endif
+
+
+
+
+
+    return 0;
+}
+
+#if RELEASE_VERSION == 1
+static void DSP_Deploy(int argc, char *argv[])
+{
     std::string config_file_path = "/srv/powerberry/config.json";
     if(argc > 1)
     {
@@ -37,20 +65,15 @@ int main(int argc, char *argv[])
     config_Manager json_config;
     json_config.readConfig(config_file_path);
 
-    Test_DSP();
-
     while(true)
     {
 
     }
-
-
-
-    return 0;
 }
+#endif
 
-
-static void Test_DSP()
+#if RELEASE_VERSION == 0
+static void DSP_Test()
 {
 
     // test redis client
@@ -87,3 +110,4 @@ static void Test_DSP()
         cout << len<< std::endl;
     }
 }
+#endif
