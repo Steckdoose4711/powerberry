@@ -4,7 +4,11 @@ Measures the current consumption of your house with a Raspberry Pi and visualize
 
 ## 🍓 Raspberry Pi Deployment
 
-Let compose do the work
+Get going with pre-built images from the container registry
+
+    docker-compose -f docker-compose.ghcr.yml up -d --build
+
+Build a production container from scratch
 
     docker-compose -f docker-compose.prod.yml up -d --build
 
