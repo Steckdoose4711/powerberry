@@ -36,8 +36,8 @@ jobs:
           push: ${{ github.ref == 'refs/heads/master' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=ghcr.io/steckdoose4711/powerberry-app:buildcache
-          cache-to: type=registry,ref=ghcr.io/steckdoose4711/powerberry-app:buildcache,mode=max
+          cache-from: type=registry,ref=ghcr.io/steckdoose4711/powerberry-dsp:buildcache
+          cache-to: type=registry,ref=ghcr.io/steckdoose4711/powerberry-dsp:buildcache,mode=max
           platforms: |
             linux/amd64
             linux/arm/v7
