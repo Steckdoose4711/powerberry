@@ -17,6 +17,7 @@ jobs:
             ghcr.io/steckdoose4711/powerberry-dsp
           tags: |
             type=sha
+            type=raw,value=latest
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v1
       - name: Setup Docker Buildx
