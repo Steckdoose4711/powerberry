@@ -1,0 +1,11 @@
+{
+    "influx_host":"192.168.8.166",
+    "influx_port":8086,
+    "influx_user":"root",
+    "influx_password":"root",
+    "influx_db":"test",
+    "influx_measurement":"test",
+    "measurement_rate_dsp": "100",
+    "sampling_rate_dsp": "100",
+    "voltage_reference_V": "230"
+}

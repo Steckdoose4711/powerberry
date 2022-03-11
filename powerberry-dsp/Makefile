@@ -1,8 +1,8 @@
 
-Files= ./src/*cpp
-./bin/powerberry-dsp: 
+Files=./src/*.cpp 
+./bin/powerberry-dsp:
 	mkdir -p bin
-	g++ -o ./bin/powerberry-dsp $(Files)
+	g++ -g -Wall -std=c++17 -pthread -o ./bin/powerberry-dsp $(Files) /usr/local/lib/libredis++.a /usr/local/lib/libhiredis.a
 	chmod +x ./bin/powerberry-dsp
 
 clean:
