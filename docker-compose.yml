@@ -6,7 +6,7 @@ services:
       service: powerberry-app
     volumes:
       - ./powerberry-app:/app
-      - ../config:/config
+      - ./config:/config
 
   # for dev, we use the container with sdk tools and bind mounts
   powerberry-dsp:
@@ -18,7 +18,7 @@ services:
       target: dev
     volumes:
       - ./powerberry-dsp:/app
-      - ../config:/config
+      - ./config:/config
 
   powerberry-redis:
     extends:
