@@ -14,7 +14,6 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: |
-            steckdoose4711/powerberry-dsp
             ghcr.io/steckdoose4711/powerberry-dsp
           tags: |
             type=sha
