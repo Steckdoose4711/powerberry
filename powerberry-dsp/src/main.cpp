@@ -7,7 +7,26 @@
 using namespace std;
 using namespace sw::redis;
 
+
+        /**
+         * Do only call this method for testing purposes.
+         * Function generates sinusoidal values and pushes them to redis
+         * @param NONE
+         * @return NONE
+         */
+static void Test_DSP();
+
 int main()
+{
+
+    
+    Test_DSP();
+
+    return 0;
+}
+
+
+static void Test_DSP()
 {
 
     // test redis client
@@ -44,7 +63,4 @@ int main()
         auto len = redis.llen("device:0:channel:0:current");
         cout << len<< std::endl;
     }
-
-
-    return 0;
 }
