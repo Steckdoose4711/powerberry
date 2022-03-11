@@ -12,12 +12,14 @@
 class config_Manager
 {
     public:
+    // read config initialy from file or refresh config
     void readConfig(std::string const &path);
+
+    // refresh config
     void readConfig();
     
 
     private:
-
     nlohmann::json m_config;
     std::string m_path_to_config;
 
