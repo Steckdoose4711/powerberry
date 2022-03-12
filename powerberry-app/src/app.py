@@ -1,30 +1,75 @@
+from enum import Enum
 from time import sleep
 
 import numpy as np
 import numpy.typing as npt
-
 from loguru import logger as log
+from redis import RedisError
 
 from .services.cache import Cache
 from .services.config import Config
+
+CACHE_RETRY_SEC = 10
+CACHE_CYCLE_SEC = 5
+
+
+class AppState(Enum):
+    Connecting = 1
+    Processing = 2
 
 
 class App:
     def __init__(self, config: Config):
         self.config = config
         self.cache = Cache(config.redis_host, config.redis_port)
+        self.state = AppState.Connecting
 
     def run(self):
-        # self.cache.push_synthetic_data()
+        while True:
+            # state machine that re-connects
+            # upon connection failures
+            if self.state == AppState.Connecting:
+                if self.connect():
+                    self.state = AppState.Processing
+            elif self.state == AppState.Processing:
+                if not self.process():
+                    self.state = AppState.Connecting
+
+    def connect(self):
+        connected = self.cache.connect()
+        if not connected:
+            log.warning(f"cache connection retry in {CACHE_RETRY_SEC} seconds ...")
+            sleep(CACHE_RETRY_SEC)
+        return connected
+
+    def process(self):
+        try:
+            self._read_devices()
+            return True
+        except RedisError as e:
+            log.warning(f"cache connection lost: {e}")
+        return False
+
+    def _read_devices(self):
         devices = self._query_devices()
 
-        while True:
-            for dev, channels in devices.items():
-                for ch in channels:
-                    self.read_channel(dev, ch)
-            sleep(5)
+        for dev, channels in devices.items():
+            for ch in channels:
+                self._read_channel(dev, ch)
 
-    def read_channel(self, dev, ch) -> npt.NDArray[np.float32]:
+        sleep(CACHE_CYCLE_SEC)
+
+    def _query_devices(self):
+        result = {}
+        devices = self.cache.get_devices()
+        for dev in devices:
+            channels = self.cache.get_channels(dev)
+            result[dev] = channels
+
+        log.info(f"queried devices and channels: {result}")
+        return result
+
+    def _read_channel(self, dev, ch) -> npt.NDArray[np.float32]:
         sample_rate = self.cache.get_sample_rate(dev, ch)
         if not sample_rate:
             log.error(f"no sample rate set for {dev}:{ch}, skip")
@@ -46,13 +91,3 @@ class App:
             f"from {dev}:{ch} "
             f"(mean values: {arr.mean(axis=1)})"
         )
-
-    def _query_devices(self):
-        result = {}
-        devices = self.cache.get_devices()
-        for dev in devices:
-            channels = self.cache.get_channels(dev)
-            result[dev] = channels
-
-        log.info(f"queried devices and channels: {result}")
-        return result

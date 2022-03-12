@@ -13,13 +13,9 @@ class Cache:
     """
 
     def __init__(self, redis_host: str, redis_port: int):
-        self.redis = None
-
         self._redis_host = redis_host
         self._redis_port = redis_port
-        self._connect()
 
-    def _connect(self):
         self.redis = redis.Redis(
             host=self._redis_host,
             port=self._redis_port,
@@ -27,8 +23,14 @@ class Cache:
             decode_responses=True,
         )
 
-        self.redis.ping()
-        log.info(f"redis connected to {self._redis_host}:{self._redis_port}")
+    def connect(self) -> bool:
+        try:
+            self.redis.ping()
+            log.info(f"redis connected to {self._redis_host}:{self._redis_port}")
+            return True
+        except redis.RedisError as e:
+            log.warning(f"redis connection failed: {e}")
+        return False
 
     def get_devices(self) -> Set[str]:
         return self.redis.smembers("devices")
