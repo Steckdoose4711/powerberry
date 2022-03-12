@@ -1,14 +1,16 @@
 from typing import Set
 
-import redis
 import numpy as np
 import numpy.typing as npt
-
+import redis
 from loguru import logger as log
 
 
 class Cache:
-    """Communicates with the in-memory persistence that is shared with the DSP"""
+    """
+    Communicates with the in-memory
+    persistence that is shared with the DSP
+    """
 
     def __init__(self, redis_host: str, redis_port: int):
         self.redis = None
@@ -33,7 +35,7 @@ class Cache:
 
     def get_channels(self, device: str) -> Set[str]:
         channels = self.redis.smembers(f"device:{device}:channels")
-        return sorted(channels)
+        return set(sorted(channels))
 
     def get_sample_rate(self, device: str, channel: str) -> int:
         sample_rate = self.redis.get(f"device:{device}:channel:{channel}:sample_rate")
@@ -42,17 +44,6 @@ class Cache:
     def get_number_of_samples(self, device: str, channel: str) -> int:
         return self.redis.llen(f"device:{device}:channel:{channel}:current")
 
-    def get_samples(
-        self, device: str, channel: str, count: int
-    ) -> npt.NDArray[np.float32]:
+    def get_samples(self, device: str, channel: str, count: int) -> npt.NDArray[np.float32]:
         samples = self.redis.rpop(f"device:{device}:channel:{channel}:current", count)
         return np.array(samples, dtype=np.float32)
-
-    def push_synthetic_data(self):
-        # TODO: remove once the dsp is ready ...
-        self.redis.sadd("devices", 0)
-        self.redis.sadd("device:0:channels", 0)
-        self.redis.set("device:0:channel:0:sample_rate", 100)
-        self.redis.lpush("device:0:channel:0:current", *range(500))
-        self.redis.ltrim("device:0:channel:0:current", 0, 60_000)
-        log.warning("filled redis with synthetic data for debugging purposes")
