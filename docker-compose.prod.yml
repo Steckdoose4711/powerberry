@@ -23,6 +23,8 @@ services:
     init: true
     volumes:
       - ./config:/config:ro
+      - /sys:/app/sys
+    privileged: true
 
   # redis is used as an in-memory store between the two
   powerberry-redis:
