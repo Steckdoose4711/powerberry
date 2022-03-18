@@ -1,15 +1,15 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-#include "adc_dummy.h"
-#include <sw/redis++/redis++.h>
-#include "config_Manager.h"
+//#include "adc_dummy.h"
+//#include <sw/redis++/redis++.h>
+//#include "config_Manager.h"
 #include <bcm2835.h>
 
 using namespace std;
-using namespace sw::redis;
+//using namespace sw::redis;
 
-#define RELEASE_VERSION 1
+#define RELEASE_VERSION 0
 
 #if RELEASE_VERSION == 0
 /**
@@ -42,13 +42,12 @@ int SPI_Test();
 
 int main(int argc, char *argv[])
 {
-
     SPI_Test();
 
     #if (RELEASE_VERSION == 1)
-        DSP_Deploy(argc, argv);
+        //DSP_Deploy(argc, argv);
     #else
-        DSP_Test();
+        //DSP_Test();
     #endif
     return 0;
 }
@@ -72,23 +71,36 @@ int SPI_Test(){
     }
     bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST);      // The default
     bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);                   // The default
-    bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_65536); // The default
+    bcm2835_spi_set_speed_hz(1000);
     bcm2835_spi_chipSelect(BCM2835_SPI_CS0);                      // The default
     bcm2835_spi_setChipSelectPolarity(BCM2835_SPI_CS0, LOW);      // the default
 
+    while(true)
+    {
+        char send_data[] = {0x06, 0x00 , 0x00 };
+        char read_data[] = {0x00, 0x00 , 0x00 };
+
+        bcm2835_spi_transfernb(send_data, read_data, sizeof(read_data));
+
+        uint32_t retVal = ((read_data[1] << 8) | read_data[2]) & 0x00000FFF;
+        double voltage = ((retVal * 1.0) / 4096) * 4.8;
+
+        //std::cout << "b0:" << unsigned(read_data[0]) << " b1:" << unsigned(read_data[1]) << " b2:" << unsigned(read_data[2]) << std::endl;
+        std::cout << "voltage = " << voltage << "V" << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
     // Send a byte to the slave and simultaneously read a byte back from the slave
     // If you tie MISO to MOSI, you should read back what was sent
-    uint8_t send_data = 0x23;
-    uint8_t read_data = bcm2835_spi_transfer(send_data);
-    printf("Sent to SPI: 0x%02X. Read back from SPI: 0x%02X.\n", send_data, read_data);
-    if (send_data != read_data)
-      printf("Do you have the loopback from MOSI to MISO connected?\n");
+    //uint8_t send_data = 0x23;
+    //uint8_t read_data = bcm2835_spi_transfer(send_data);
+
+
     bcm2835_spi_end();
     bcm2835_close();
     return 0;
 }
 
-
+/*
 #if RELEASE_VERSION == 1
 static void DSP_Deploy(int argc, char *argv[])
 {
@@ -148,3 +160,4 @@ static void DSP_Test()
     }
 }
 #endif
+*/
