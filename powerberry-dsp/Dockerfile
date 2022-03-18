@@ -1,3 +1,4 @@
+
 FROM debian:bullseye AS dev
 WORKDIR /app
 
@@ -5,7 +6,10 @@ WORKDIR /app
 # VOLUME /app
 
 RUN apt-get update && \
-    apt-get install -y build-essential cmake gdb git
+    apt-get install -y build-essential cmake gdb git && \
+	#install tools for spi library (bcm2835)
+	apt install wget && \
+	apt install nano
 
 RUN cd /tmp && \
     git clone --branch v1.0.2 https://github.com/redis/hiredis.git && \
@@ -23,6 +27,17 @@ RUN cd /tmp && \
     make -j4 && \
     make install && \
     ldconfig
+
+#install bcm2835 library (needed for spi)
+RUN cd /tmp && \
+	wget http://www.airspayce.com/mikem/bcm2835/bcm2835-1.58.tar.gz && \
+	tar xvfz bcm2835-1.58.tar.gz && \
+	cd bcm2835-1.58 && \
+	./configure && \
+	make && \
+	#make check && \
+	make install && \
+	ldconfig
 
 COPY src src/
 COPY Makefile .
