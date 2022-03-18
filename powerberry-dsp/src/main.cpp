@@ -38,10 +38,12 @@ static void DSP_Deploy(int argc, char *argv[]);
     * @return NONE
 */
 
-int SPI_Test();
+int make cleSPI_Test();
 
 int main(int argc, char *argv[])
 {
+
+    SPI_Test();
 
     #if (RELEASE_VERSION == 1)
         DSP_Deploy(argc, argv);
@@ -49,7 +51,7 @@ int main(int argc, char *argv[])
         DSP_Test();
     #endif
 
-    SPI_Test();
+
 
 
 
