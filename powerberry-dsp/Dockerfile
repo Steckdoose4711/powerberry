@@ -8,8 +8,8 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y build-essential cmake gdb git && \
 	#install tools for spi library (bcm2835)
-	apt install wget && \
-	apt install nano
+	apt-get install wget && \
+	apt-get install nano
 
 RUN cd /tmp && \
     git clone --branch v1.0.2 https://github.com/redis/hiredis.git && \
