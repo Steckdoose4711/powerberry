@@ -1,3 +1,5 @@
+#ifndef ADC_DUMMY_H
+#define ADC_DUMMY_H
 /**
  * @file adc_dummy.h
  * @author Florian Atzenhofer
@@ -52,3 +54,5 @@ class adc_dummy : public adc_interface
         std::chrono::_V2::steady_clock::time_point m_start;
 
 };
+
+#endif // ADC_DUMMY_H

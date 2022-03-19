@@ -88,3 +88,4 @@ void adc_dummy::add_noise_to_sample(double & sample)
     sample += scaled_noise;
 
 }
+

@@ -2,15 +2,18 @@
 #include <fstream>
 #include <chrono>
 #include <thread>
-//#include "adc_dummy.h"
-//#include <sw/redis++/redis++.h>
-//#include "config_Manager.h"
+#include <sw/redis++/redis++.h>
 #include <bcm2835.h>
 
-using namespace std;
-//using namespace sw::redis;
+#include "adc_interface.h"
+#include "adc_dummy.h"
+#include "config_Manager.h"
+#include "spi_wrapper.h"
 
-#define RELEASE_VERSION 0
+using namespace std;
+using namespace sw::redis;
+
+#define RELEASE_VERSION 1
 
 #if RELEASE_VERSION == 0
 /**
@@ -43,12 +46,12 @@ int SPI_Test();
 
 int main(int argc, char *argv[])
 {
-    SPI_Test();
+    //SPI_Test();
 
     #if (RELEASE_VERSION == 1)
-        //DSP_Deploy(argc, argv);
+        DSP_Deploy(argc, argv);
     #else
-        //DSP_Test();
+        DSP_Test();
     #endif
     return 0;
 }
@@ -105,21 +108,30 @@ int SPI_Test(){
     bcm2835_spi_end();
     bcm2835_close();
     return 0;
+    
 }
 
-/*
+
 #if RELEASE_VERSION == 1
 static void DSP_Deploy(int argc, char *argv[])
 {
     std::string config_file_path = "/srv/powerberry/config.json";
-    if(argc > 1)e
+    if(argc > 1)
     {
         config_file_path = argv[1];
     }
 
-    // read json config file
+    //TODO: finish config file implementation
+
+    // Creating instances of the needed DSP Blocks
     config_Manager json_config;
+    spi_wrapper spi_interface();
+
     json_config.readConfig(config_file_path);
+
+
+
+
 
     while(true)
     {
@@ -141,11 +153,11 @@ static void DSP_Test()
 
     redis.set("device:0:channel:0:sample_rate", "100");
 
-    adc_interface * test = new adc_dummy();
+    adc_interface * syntheticADC = new adc_dummy();
 
     size_t const testchannel = 4;
 
-    test->init(0);
+    syntheticADC->init(0);
 
 
     while(true)
@@ -153,18 +165,17 @@ static void DSP_Test()
         for(int i = 0; i < 100; i++)
         {
             std::ostringstream ss;
-            auto sample_point = test->read_voltage(testchannel);
+            auto sample_point = syntheticADC->read_voltage(testchannel);
             ss << sample_point;
             redis.lpush("device:0:channel:0:current", ss.str());
 
-            //std::cout << "sample point: " << sample_point << std::endl;
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
         redis.ltrim("device:0:channel:0:current", 0, 10000);
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         auto len = redis.llen("device:0:channel:0:current");
         cout << len<< std::endl;
     }
+    
 }
 #endif
-*/

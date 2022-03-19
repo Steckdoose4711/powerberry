@@ -1,3 +1,5 @@
+#ifndef ADC_INTERFACE_H
+#define ADC_INTERFACE_H
 /**
  * @file adc_interface.h
  * @author Florian Atzenhofer
@@ -36,3 +38,5 @@ class adc_interface
         virtual float read_voltage(size_t const channel) = 0;
 
 };
+
+#endif // ADC_INTERFACE_H
