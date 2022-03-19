@@ -95,7 +95,7 @@ int SPI_Test(){
         //std::this_thread::sleep_for(std::chrono::milliseconds(10));
         myfile << voltage << std::endl;
 
-    }
+    } 
     // Send a byte to the slave and simultaneously read a byte back from the slave
     // If you tie MISO to MOSI, you should read back what was sent
     //uint8_t send_data = 0x23;
