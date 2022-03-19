@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <chrono>
 #include <thread>
 //#include "adc_dummy.h"
@@ -71,11 +72,15 @@ int SPI_Test(){
     }
     bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST);      // The default
     bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);                   // The default
-    bcm2835_spi_set_speed_hz(1000);
+    bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_128);   //3.125MHz
     bcm2835_spi_chipSelect(BCM2835_SPI_CS0);                      // The default
     bcm2835_spi_setChipSelectPolarity(BCM2835_SPI_CS0, LOW);      // the default
 
-    while(true)
+    std::ofstream myfile;
+    myfile.open ("samples.csv");
+
+
+    for(int i = 0; i < 10000; i++)
     {
         char send_data[] = {0x06, 0x00 , 0x00 };
         char read_data[] = {0x00, 0x00 , 0x00 };
@@ -87,13 +92,15 @@ int SPI_Test(){
 
         //std::cout << "b0:" << unsigned(read_data[0]) << " b1:" << unsigned(read_data[1]) << " b2:" << unsigned(read_data[2]) << std::endl;
         std::cout << "voltage = " << voltage << "V" << std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        myfile << voltage << std::endl;
+
     }
     // Send a byte to the slave and simultaneously read a byte back from the slave
     // If you tie MISO to MOSI, you should read back what was sent
     //uint8_t send_data = 0x23;
     //uint8_t read_data = bcm2835_spi_transfer(send_data);
-
+  myfile.close();
 
     bcm2835_spi_end();
     bcm2835_close();
@@ -105,7 +112,7 @@ int SPI_Test(){
 static void DSP_Deploy(int argc, char *argv[])
 {
     std::string config_file_path = "/srv/powerberry/config.json";
-    if(argc > 1)
+    if(argc > 1)e
     {
         config_file_path = argv[1];
     }
