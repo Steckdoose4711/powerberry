@@ -11,6 +11,8 @@
 #include "config_Manager.h"
 #include "spi/spi_wrapper.h"
 #include "adc/adc.h"
+#include "datastorage/datastorage.h"
+#include "datastorage/datastorage_redis.h"
 
 using namespace std;
 using namespace sw::redis;
@@ -72,8 +74,14 @@ static void DSP_Deploy(int argc, char *argv[])
 
     // Creating instances of the needed DSP Blocks for real ADC
     config_Manager json_config;
+
+    // spi and adc
     std::shared_ptr<spi_wrapper> spi_wrapper_instance = std::make_shared<spi_wrapper>();
     std::shared_ptr<adc_interface> adc0 = std::make_shared<adc>(spi_wrapper_instance, ADC0_Chipselect);
+
+    //redis
+    std::shared_ptr<datastorage> datastorage_instance = std::make_shared<datastorage_redis>("tcp://powerberry-redis:6379", 1, 8, 100);
+
 
     json_config.readConfig(config_file_path);
 
