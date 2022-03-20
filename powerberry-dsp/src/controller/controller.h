@@ -14,7 +14,7 @@
 #include "filters/filter_interface.h"
 
 #define SAMPLES_PER_CHANNEL 3   // number of samples per measurement for one channel
-
+#define MEASUREMENT_FREQUENCY 100 // frequency of the measurements in Hz
 
 class controller
 {

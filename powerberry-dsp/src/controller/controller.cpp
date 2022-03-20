@@ -10,6 +10,7 @@
 
 #include<thread>
 #include <chrono>
+#include <iostream>
 
 
 
@@ -32,7 +33,7 @@ while(true)
     for (auto const& adc : m_adc_list)
     {
         std::vector<std::vector<measurement_t>> raw_values;
-        std::vector<float> filtered_adc_values;
+        std::vector<measurement_t> filtered_adc_values;
 
         // we need to know how much channel this adc has
         size_t number_channels = adc->get_number_channels();
@@ -57,18 +58,25 @@ while(true)
         // filtered_adc_values fill have same size as number of channels of this ADC
         for(auto it = raw_values.begin(); it != raw_values.end(); it++)
         {
-            //filtered_adc_values.emplace_back(m_filter->filter_values(*it)); // filter values for each samples
+            filtered_adc_values.emplace_back(m_filter->filter_values(*it)); // filter values for each channel
         }
+
+        // now we have filtered all channels of this ADC and we can store them into our data storage
 
     }
 
     auto end = std::chrono::steady_clock::now();
     auto elapsed = end - start;
 
-    auto timeToWait = std::chrono::milliseconds(10) - elapsed;
+    size_t periode_time = (1.0 / MEASUREMENT_FREQUENCY) * 1000;
+    auto timeToWait = std::chrono::milliseconds(periode_time) - elapsed;
     if(timeToWait > std::chrono::milliseconds::zero())
     {
         std::this_thread::sleep_for(timeToWait);
+    }
+    else
+    {
+        std::cerr << "[WARNING] to slow to process all samples" << std::endl;
     }
 }
 }
