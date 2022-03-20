@@ -23,13 +23,7 @@ class spi_wrapper
         /**
          * SPI CTOR uses the defaule CS pin (PIN24 = GPIO8).
          */
-        spi_wrapper(); 
-
-        /**
-         * SPI CTOR.
-         * @param chip_select sets the default GPIO Pin, which is used for the Chip select of the ADC.
-         */
-        spi_wrapper(size_t const chip_select);
+        spi_wrapper();
 
           /**
          * Transfers data through the SPI bus. This function is thread safe.
@@ -39,12 +33,12 @@ class spi_wrapper
          * @param[in] len Number of bytes in the tbuf buffer, and the number of bytes to send/received
          * @return errorcode (0) at success (-1) at failure
          */ 
-        void spi_transfer(char * const tbuf, char * const rbuf, size_t const chip_select,  size_t const len);
+        void spi_transfer(uint8_t * const tbuf, uint8_t * const rbuf, size_t const chip_select,  size_t const len);
 
         /**
          * release all allocated SPI-Resources
          */
-        ~spi_wrapper();
+        virtual ~spi_wrapper();
 
     private:
 

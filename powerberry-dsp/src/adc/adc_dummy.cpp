@@ -56,6 +56,12 @@ float adc_dummy::read_voltage(size_t const channel)
     return sample_point;
 }
 
+
+void adc_dummy::set_reference_voltage(float const v_reference)
+{
+    // nothing to do here
+}
+
 size_t adc_dummy::get_time_in_current_periode()
 {
     // get sample time of the sinewave

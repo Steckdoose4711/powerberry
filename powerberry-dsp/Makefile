@@ -5,8 +5,6 @@ Includes= ./src
 ./bin/powerberry-dsp:
 	mkdir -p bin
 	g++ -g -Wall -Wfatal-errors -std=c++17 -pthread -o ./bin/powerberry-dsp $(Files) $(Libraries) -I $(Includes)
-
-	#g++ -g -Wall -Wfatal-errors -std=c++17 -pthread -o ./bin/powerberry-dsp $(Files) -l bcm2835
 	chmod +x ./bin/powerberry-dsp
 
 clean:

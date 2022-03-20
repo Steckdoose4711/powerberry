@@ -32,6 +32,13 @@ class adc_dummy : public adc_interface
          */
         float read_voltage(size_t const channel);
 
+        /**
+         * Sets the reference voltage for the ADC. This is needed to convert digits to voltage.
+         * @param v_reference reference voltage of the ADC in [V]
+         * @return NONE
+         */
+        void set_reference_voltage(float const v_reference);        
+
     private:
 
 

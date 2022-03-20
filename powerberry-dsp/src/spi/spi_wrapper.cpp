@@ -11,13 +11,8 @@
 
 spi_wrapper::spi_wrapper()
 {
-    spi_wrapper(DEFAULT_SPI_PIN);
-}
 
-spi_wrapper::spi_wrapper(size_t const chip_select)
-{
-    m_current_cs_pin = chip_select;
-
+    m_current_cs_pin = 0;
     // be aware that the application must be started as root
     if (!bcm2835_init())
     {
@@ -34,7 +29,6 @@ spi_wrapper::spi_wrapper(size_t const chip_select)
     bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_128);   // 3.125MHz clock speed
     bcm2835_spi_chipSelect(BCM2835_SPI_CS0);                      // The default
     bcm2835_spi_setChipSelectPolarity(BCM2835_SPI_CS0, LOW);      // The default
-    bcm2835_spi_chipSelect(m_current_cs_pin);
 }
 
 spi_wrapper::~spi_wrapper()
@@ -44,7 +38,7 @@ spi_wrapper::~spi_wrapper()
 }
 
 
-void spi_wrapper::spi_transfer(char * const tbuf, char * const rbuf, size_t const chip_select,  size_t const len)
+void spi_wrapper::spi_transfer(uint8_t * const tbuf, uint8_t * const rbuf, size_t const chip_select,  size_t const len)
 {
     // this function is thread safe
     std::lock_guard<std::mutex> lock(m_spi_mutex);
@@ -56,5 +50,5 @@ void spi_wrapper::spi_transfer(char * const tbuf, char * const rbuf, size_t cons
         bcm2835_spi_chipSelect(chip_select);
     }
     
-    bcm2835_spi_transfernb(tbuf, rbuf, len);
+    bcm2835_spi_transfernb(reinterpret_cast<char * >(tbuf), reinterpret_cast<char * >(rbuf), len);
 }

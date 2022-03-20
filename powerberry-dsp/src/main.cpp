@@ -4,6 +4,7 @@
 #include <thread>
 #include <sw/redis++/redis++.h>
 #include <bcm2835.h>
+#include <memory>
 
 #include "adc/adc_interface.h"
 #include "adc/adc_dummy.h"
@@ -15,6 +16,7 @@ using namespace std;
 using namespace sw::redis;
 
 #define RELEASE_VERSION 1
+#define ADC0_Chipselect RPI_V2_GPIO_P1_18
 
 #if RELEASE_VERSION == 0
 /**
@@ -68,10 +70,10 @@ static void DSP_Deploy(int argc, char *argv[])
 
     //TODO: finish config file implementation
 
-    // Creating instances of the needed DSP Blocks
+    // Creating instances of the needed DSP Blocks for real ADC
     config_Manager json_config;
-    spi_wrapper * spi_wrap = new spi_wrapper();
-    //adc adc(spi_wrap);
+    std::shared_ptr<spi_wrapper> spi_wrapper_instance = std::make_shared<spi_wrapper>();
+    std::shared_ptr<adc_interface> adc0 = std::make_shared<adc>(spi_wrapper_instance, ADC0_Chipselect);
 
     json_config.readConfig(config_file_path);
 
