@@ -17,10 +17,9 @@
     static double max_amplitude = 0.5;
     static size_t sine_wave_frequency = 50;
 
-int adc_dummy::init(size_t const chip_select)
+adc_dummy::adc_dummy()
 {
     // calculating an ideal sine wave with a resolution of 
-
 
     // calculate one ideal sinewave 
     for(size_t i = 0; i < nr_samples; i++)
@@ -32,7 +31,6 @@ int adc_dummy::init(size_t const chip_select)
 
    // get current cpu tick timestamp to simulate the "oscillating" sine wave when reading from it
    m_start = std::chrono::steady_clock::now();
-    return 0;
 }
 
 

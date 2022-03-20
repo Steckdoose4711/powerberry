@@ -12,19 +12,18 @@
 #include <vector>
 #include <chrono>
 
-void testfunc();
 
 
 class adc_dummy : public adc_interface
 {
 
     public:
+
         /**
          * Initialize the ADC .
-         * @param chip_select sets the GPIO Pin, which is used for the Chip select of the ADC.
          * @return errorcode (0) at success (-1) at failure
          */
-        int init(size_t const chip_select);
+        adc_dummy();
 
         /**
          * Read voltages from a specific ADC Channel .

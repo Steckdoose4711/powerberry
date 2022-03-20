@@ -1,9 +1,12 @@
 
-Files=./src/*.cpp 
+Files=./src/*.cpp ./src/spi/*.cpp ./src/adc/*.cpp
+Libraries=/usr/local/lib/libredis++.a /usr/local/lib/libhiredis.a -l bcm2835
+Includes= ./src
 ./bin/powerberry-dsp:
 	mkdir -p bin
-	g++ -g -Wall -Wfatal-errors -std=c++17 -pthread -o ./bin/powerberry-dsp $(Files) /usr/local/lib/libredis++.a /usr/local/lib/libhiredis.a -l bcm2835 
-	#g++ -g -Wall -Wfatal-errors -std=c++17 -pthread -o ./bin/powerberry-dsp $(Files) -l bcm2835 
+	g++ -g -Wall -Wfatal-errors -std=c++17 -pthread -o ./bin/powerberry-dsp $(Files) $(Libraries) -I $(Includes)
+
+	#g++ -g -Wall -Wfatal-errors -std=c++17 -pthread -o ./bin/powerberry-dsp $(Files) -l bcm2835
 	chmod +x ./bin/powerberry-dsp
 
 clean:

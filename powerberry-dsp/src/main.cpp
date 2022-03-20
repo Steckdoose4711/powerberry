@@ -5,10 +5,11 @@
 #include <sw/redis++/redis++.h>
 #include <bcm2835.h>
 
-#include "adc_interface.h"
-#include "adc_dummy.h"
+#include "adc/adc_interface.h"
+#include "adc/adc_dummy.h"
 #include "config_Manager.h"
-#include "spi_wrapper.h"
+#include "spi/spi_wrapper.h"
+#include "adc/adc.h"
 
 using namespace std;
 using namespace sw::redis;
@@ -56,6 +57,77 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+#if RELEASE_VERSION == 1
+static void DSP_Deploy(int argc, char *argv[])
+{
+    std::string config_file_path = "/srv/powerberry/config.json";
+    if(argc > 1)
+    {
+        config_file_path = argv[1];
+    }
+
+    //TODO: finish config file implementation
+
+    // Creating instances of the needed DSP Blocks
+    config_Manager json_config;
+    spi_wrapper * spi_wrap = new spi_wrapper();
+    //adc adc(spi_wrap);
+
+    json_config.readConfig(config_file_path);
+
+
+
+
+
+    while(true)
+    {
+
+    }
+}
+#endif
+
+#if RELEASE_VERSION == 0
+static void DSP_Test()
+{
+
+    // test redis client
+    auto redis = Redis("tcp://powerberry-redis:6379");
+
+    redis.sadd("devices", "0");
+
+    redis.sadd("device:0:channels", "0");
+
+    redis.set("device:0:channel:0:sample_rate", "100");
+
+    adc_interface * syntheticADC = new adc_dummy();
+
+    size_t const testchannel = 4;
+
+
+
+    while(true)
+    {
+        for(int i = 0; i < 100; i++)
+        {
+            std::ostringstream ss;
+            auto sample_point = syntheticADC->read_voltage(testchannel);
+            ss << sample_point;
+            redis.lpush("device:0:channel:0:current", ss.str());
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+        redis.ltrim("device:0:channel:0:current", 0, 10000);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        auto len = redis.llen("device:0:channel:0:current");
+        cout << len<< std::endl;
+    }
+    
+}
+#endif
+
+
+
+/*
 int SPI_Test(){
 
 // If you call this, it will not actually access the GPIO
@@ -110,72 +182,4 @@ int SPI_Test(){
     return 0;
     
 }
-
-
-#if RELEASE_VERSION == 1
-static void DSP_Deploy(int argc, char *argv[])
-{
-    std::string config_file_path = "/srv/powerberry/config.json";
-    if(argc > 1)
-    {
-        config_file_path = argv[1];
-    }
-
-    //TODO: finish config file implementation
-
-    // Creating instances of the needed DSP Blocks
-    config_Manager json_config;
-    spi_wrapper spi_interface();
-
-    json_config.readConfig(config_file_path);
-
-
-
-
-
-    while(true)
-    {
-
-    }
-}
-#endif
-
-#if RELEASE_VERSION == 0
-static void DSP_Test()
-{
-
-    // test redis client
-    auto redis = Redis("tcp://powerberry-redis:6379");
-
-    redis.sadd("devices", "0");
-
-    redis.sadd("device:0:channels", "0");
-
-    redis.set("device:0:channel:0:sample_rate", "100");
-
-    adc_interface * syntheticADC = new adc_dummy();
-
-    size_t const testchannel = 4;
-
-    syntheticADC->init(0);
-
-
-    while(true)
-    {
-        for(int i = 0; i < 100; i++)
-        {
-            std::ostringstream ss;
-            auto sample_point = syntheticADC->read_voltage(testchannel);
-            ss << sample_point;
-            redis.lpush("device:0:channel:0:current", ss.str());
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
-        redis.ltrim("device:0:channel:0:current", 0, 10000);
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        auto len = redis.llen("device:0:channel:0:current");
-        cout << len<< std::endl;
-    }
-    
-}
-#endif
+*/

@@ -11,22 +11,28 @@
 #include <vector>
 #include <mutex>
 
+// Defines
+#define DEFAULT_SPI_PIN 24
+
+
+
 class spi_wrapper
 {
     public:
+
+        /**
+         * SPI CTOR uses the defaule CS pin (PIN24 = GPIO8).
+         */
+        spi_wrapper(); 
+
         /**
          * SPI CTOR.
          * @param chip_select sets the default GPIO Pin, which is used for the Chip select of the ADC.
          */
         spi_wrapper(size_t const chip_select);
 
-        /**
-         * SPI CTOR which is using the defaule CS pin (PIN24 = GPIO8).
-         */
-        spi_wrapper();        
-
           /**
-         * Initialize the SPI.
+         * Transfers data through the SPI bus. This function is thread safe.
          * @param[in] tbuf Buffer of bytes to send. 
          * @param[out] rbuf Received bytes will by put in this buffer
          * @param [in] chip_select Chip Select pin, which is used by this instance.
@@ -35,15 +41,17 @@ class spi_wrapper
          */ 
         void spi_transfer(char * const tbuf, char * const rbuf, size_t const chip_select,  size_t const len);
 
-
-    private:
-
         /**
          * release all allocated SPI-Resources
          */
         ~spi_wrapper();
 
-    size_t m_current_cs_pin;
+    private:
+
+
+
+    // private members
+    size_t m_current_cs_pin; // current chip select pin
     std::mutex m_spi_mutex; // locks multiple calls of the spi against each other
 
 };
