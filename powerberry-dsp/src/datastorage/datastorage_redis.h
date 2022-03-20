@@ -7,7 +7,7 @@
  * @brief This is the interface of the redis datastorage[Interface]
  */
 
-#include "datastorage.h"
+#include "datastorage_interface.h"
 
 #include <sw/redis++/redis++.h>
 #include <string>
@@ -16,7 +16,7 @@
 
 using namespace sw::redis;
 
-class datastorage_redis : public datastorage
+class datastorage_redis : public datastorage_interface
 {
     public:
 

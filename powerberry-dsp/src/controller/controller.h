@@ -12,6 +12,7 @@
 
 #include "adc/adc_interface.h"
 #include "filters/filter_interface.h"
+#include "datastorage/datastorage_interface.h"
 
 #define SAMPLES_PER_CHANNEL 3   // number of samples per measurement for one channel
 #define MEASUREMENT_FREQUENCY 100 // frequency of the measurements in Hz
@@ -24,12 +25,7 @@ class controller
          * @param values vector with the raw values (be carefull, this vector is passed by VALUE)
          * @return the filtered voltage
          */
-        controller(std::vector<std::shared_ptr<adc_interface>> adc_list, std::shared_ptr<filter_interface> filter);
-
-
-
-
-    private:
+        controller(std::vector<std::shared_ptr<adc_interface>> adc_list, std::shared_ptr<filter_interface> p_filter, std::shared_ptr<datastorage_interface> p_datastorage);
 
         /**
          * This function reads the ADC Samples for each channel and pushes the filtered values to Redis.
@@ -37,8 +33,12 @@ class controller
          */
         void start_DSP();
 
+
+    private:
+
     std::vector<std::shared_ptr<adc_interface>> m_adc_list;
-    std::shared_ptr<filter_interface> m_filter;
+    std::shared_ptr<filter_interface> m_p_filter;
+    std::shared_ptr<datastorage_interface> m_p_datastorage;
 };
 
 #endif // CONTROLLER_H

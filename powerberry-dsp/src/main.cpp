@@ -11,13 +11,16 @@
 #include "config_Manager.h"
 #include "spi/spi_wrapper.h"
 #include "adc/adc.h"
-#include "datastorage/datastorage.h"
+#include "filters/filter_interface.h"
+#include "filters/filter_median.h"
+#include "datastorage/datastorage_interface.h"
 #include "datastorage/datastorage_redis.h"
+#include "controller/controller.h"
 
 using namespace std;
 using namespace sw::redis;
 
-#define RELEASE_VERSION 1
+#define RELEASE_VERSION 0
 #define ADC0_Chipselect RPI_V2_GPIO_P1_18
 
 #if RELEASE_VERSION == 0
@@ -75,17 +78,24 @@ static void DSP_Deploy(int argc, char *argv[])
     // Creating instances of the needed DSP Blocks for real ADC
     config_Manager json_config;
 
-    // spi and adc
+    // spi, adc and median filter
     std::shared_ptr<spi_wrapper> spi_wrapper_instance = std::make_shared<spi_wrapper>();
-    std::shared_ptr<adc_interface> adc0 = std::make_shared<adc>(spi_wrapper_instance, ADC0_Chipselect);
+    std::shared_ptr<adc_interface> adc0_instance = std::make_shared<adc>(spi_wrapper_instance, ADC0_Chipselect);
+    std::shared_ptr<filter_interface> filter_instance = std::make_shared<filter_median>();
 
     //redis
-    std::shared_ptr<datastorage> datastorage_instance = std::make_shared<datastorage_redis>("tcp://powerberry-redis:6379", 1, 8, 100);
+    std::shared_ptr<datastorage_interface> datastorage_instance = std::make_shared<datastorage_redis>("tcp://powerberry-redis:6379", 1, 8, 100);
 
+    // controller
+    // at first, we have to store our ADCs in a vector, because the controller-interface wants a vector...
+    std::vector<std::shared_ptr<adc_interface>> adcs;
+    adcs.emplace_back(adc0_instance);
+    std::shared_ptr<controller> controller_instance = std::make_shared<controller>(adcs, filter_instance, datastorage_instance);
 
     json_config.readConfig(config_file_path);
 
 
+    controller_instance->start_DSP();
 
 
 

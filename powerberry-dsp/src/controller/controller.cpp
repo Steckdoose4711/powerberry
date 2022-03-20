@@ -14,10 +14,11 @@
 
 
 
-controller::controller(std::vector<std::shared_ptr<adc_interface>> adc_list, std::shared_ptr<filter_interface> filter)
+controller::controller(std::vector<std::shared_ptr<adc_interface>> adc_list, std::shared_ptr<filter_interface> p_filter, std::shared_ptr<datastorage_interface> p_datastorage)
 {
     m_adc_list = adc_list;
-    m_filter = filter;
+    m_p_filter = p_filter;
+    m_p_datastorage = p_datastorage;
 }
 
 
@@ -28,12 +29,13 @@ while(true)
 {
     // we need to measure the time, which is needed for our code to calculate waiting time until the next measurement
     auto start = std::chrono::steady_clock::now();
-    
+    size_t used_device = 0;
+
     // do measurement for all ADCs
     for (auto const& adc : m_adc_list)
     {
         std::vector<std::vector<measurement_t>> raw_values;
-        std::vector<measurement_t> filtered_adc_values;
+        std::shared_ptr<std::vector<measurement_t>> p_filtered_adc_values = std::make_shared<std::vector<measurement_t>>();
 
         // we need to know how much channel this adc has
         size_t number_channels = adc->get_number_channels();
@@ -58,11 +60,12 @@ while(true)
         // filtered_adc_values fill have same size as number of channels of this ADC
         for(auto it = raw_values.begin(); it != raw_values.end(); it++)
         {
-            filtered_adc_values.emplace_back(m_filter->filter_values(*it)); // filter values for each channel
+            p_filtered_adc_values->emplace_back(m_p_filter->filter_values(*it)); // filter values for each channel
         }
 
         // now we have filtered all channels of this ADC and we can store them into our data storage
-
+        m_p_datastorage->store_measurement(used_device, p_filtered_adc_values);
+        used_device++;
     }
 
     auto end = std::chrono::steady_clock::now();

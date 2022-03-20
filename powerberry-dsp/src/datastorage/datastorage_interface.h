@@ -13,7 +13,7 @@
 
 #include "filters/filter_interface.h"
 
-class datastorage
+class datastorage_interface
 {
 
     public:
