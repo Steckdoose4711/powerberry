@@ -37,9 +37,11 @@ adc::adc(std::shared_ptr<spi_wrapper> const spi, size_t const chip_select)
 
 float adc::read_voltage(size_t const channel)
 {
-    if(channel > 7)
+
+    std::string errormessage = "[ERROR]: channel must be between 0 and " + std::to_string(DEFAULT_NUMBER_USED_CHANNELS - 1) + "!";
+    if(channel > (DEFAULT_NUMBER_USED_CHANNELS - 1))
     {
-        throw "[ERROR]: channel must be between 0 and 7!";
+        throw errormessage;
     }
         // make them static to do not have to create a new object every time
 
@@ -60,4 +62,10 @@ float adc::read_voltage(size_t const channel)
 void adc::set_reference_voltage(float const v_reference)
 {
     m_v_reference = v_reference;
+}
+
+
+size_t adc::get_number_channels()
+{
+    return DEFAULT_NUMBER_USED_CHANNELS;
 }

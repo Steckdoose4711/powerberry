@@ -38,6 +38,12 @@ class adc_interface
          */
         virtual void set_reference_voltage(float const v_reference) = 0;
 
+        /**
+         * Returns the number of supported channels by this ADC
+         * @return number of supported channels
+         */
+        virtual size_t get_number_channels() = 0;
+
 };
 
 #endif // ADC_INTERFACE_H

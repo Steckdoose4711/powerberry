@@ -23,7 +23,7 @@ class filter_median : public filter_interface
          * @param values vector with the raw values (be carefull, this vector is passed by VALUE)
          * @return the filtered voltage
          */
-        float filter_values(std::vector<float> values);
+        measurement_t filter_values(std::vector<measurement_t> values);
 
     private:
 

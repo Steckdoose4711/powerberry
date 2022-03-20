@@ -39,6 +39,12 @@ class adc_dummy : public adc_interface
          */
         void set_reference_voltage(float const v_reference);        
 
+        /**
+         * Returns the number of supported channels by this ADC
+         * @return number of supported channels
+         */
+        size_t get_number_channels();
+
     private:
 
 

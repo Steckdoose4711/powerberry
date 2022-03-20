@@ -9,11 +9,22 @@
 
 #include "filter_median.h"
 #include <algorithm>
+#include <tuple>
 
-float filter_median::filter_values(std::vector<float> values)
+
+// Comparison function to sort the vector elements
+// by second element of tuples
+static bool sortbysec(const measurement_t & a, 
+               const measurement_t & b)
 {
-    // sort the values
-    std::sort(values.begin(), values.end());
+    return (std::get<1>(a) < std::get<1>(b));
+}
+
+
+measurement_t filter_median::filter_values(std::vector<measurement_t> values)
+{
+    // sort the measurements by the measured values (not by timestamp)
+    std::sort(values.begin(), values.end(), sortbysec);
 
     // get the median
     size_t const median_index = values.size() / 2;

@@ -9,15 +9,22 @@
 
 #include "filter_mean.h"
 #include <algorithm>
+#include<tuple>
 
-float filter_mean::filter_values(std::vector<float> values)
+measurement_t filter_mean::filter_values(std::vector<measurement_t> values)
 {
+
     // get the mean
-    float sum = 0;
-    for (auto const& value : values)
+    float sum_timestamp = 0;
+    float sum_value = 0;
+    for (auto it = values.begin(); it != values.end(); it++)
     {
-        sum += value;
+        sum_timestamp += std::get<0>(*it);
+        sum_value += std::get<1>(*it);
     }
-    return sum / values.size();
+    float mean_timestamp = sum_timestamp / values.size();
+    float mean_value = sum_value / values.size();
+
+    return measurement_t(mean_timestamp, mean_value);
 }
 

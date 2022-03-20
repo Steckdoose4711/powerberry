@@ -1,5 +1,5 @@
 
-Files=./src/*.cpp ./src/spi/*.cpp ./src/adc/*.cpp ./src/filters/*.cpp
+Files=./src/*.cpp ./src/spi/*.cpp ./src/adc/*.cpp ./src/filters/*.cpp ./src/controller/*.cpp
 Libraries=/usr/local/lib/libredis++.a /usr/local/lib/libhiredis.a -l bcm2835
 Includes= ./src
 ./bin/powerberry-dsp:

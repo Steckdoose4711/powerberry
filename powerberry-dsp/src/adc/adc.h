@@ -17,6 +17,7 @@
 
 #define DEFAULT_RESOLUTION 12           // the default resolution of the ADC is 12 Bit
 #define DEFAULT_REFERENCE_VOLTAGE 4.8   // the default reference voltage of the ADC is 4.8 V
+#define DEFAULT_NUMBER_USED_CHANNELS 8  // the default number of used channels is 8
 
 class adc : public adc_interface
 {
@@ -42,6 +43,14 @@ class adc : public adc_interface
          * @return NONE
          */
         void set_reference_voltage(float const v_reference);
+
+        /**
+         * Returns the number of supported channels by this ADC
+         * @return number of supported channels
+         */
+        size_t get_number_channels();
+
+
 
 
     private:
