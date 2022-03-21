@@ -7,7 +7,7 @@ Includes= ./src
 ./bin/powerberry-dsp:
 	mkdir -p bin
 	g++ -g -Wall -Wno-psabi -Wfatal-errors -std=c++17 -pthread -o ./bin/powerberry-dsp $(Files) $(Libraries) -I $(Includes) -O3
-	chmod +x ./bin/pdockerowerberry-dsp
+	chmod +x ./bin/powerberry-dsp
 
 clean:
 	rm -rf ./bin
