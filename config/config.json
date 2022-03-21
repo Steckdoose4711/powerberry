@@ -1,7 +1,7 @@
 {
   "influx_host": "powerberry-influx",
-  "influx_port": 8086,
-  "measurement_rate_dsp": 5,
-  "sampling_rate": 100,
-  "voltage_reference": 228.0
+  "influx_port": "8086",
+  "measurement_rate_dsp": "5",
+  "sampling_rate": "100",
+  "voltage_reference": "228.0"
 }
