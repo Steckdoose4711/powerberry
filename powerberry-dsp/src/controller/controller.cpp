@@ -14,11 +14,18 @@
 
 
 
-controller::controller(std::vector<std::shared_ptr<adc_interface>> adc_list, std::shared_ptr<filter_interface> p_filter, std::shared_ptr<datastorage_interface> p_datastorage)
+controller::controller( std::vector<std::shared_ptr<adc_interface>> adc_list,
+                        std::shared_ptr<filter_interface> p_filter,
+                        std::shared_ptr<datastorage_interface> p_datastorage,
+                        size_t const measurement_rate,
+                        size_t const sampling_rate)
 {
     m_adc_list = adc_list;
     m_p_filter = p_filter;
     m_p_datastorage = p_datastorage;
+    m_measurement_rate = measurement_rate;
+    m_sampling_rate = sampling_rate;
+
 }
 
 
@@ -52,7 +59,7 @@ while(true)
         for(size_t i = 0; i < number_channels; i++)
         {
             std::vector<measurement_t> raw_channel_values;
-            for(size_t j = 0; j < SAMPLES_PER_CHANNEL; j++)
+            for(size_t j = 0; j < m_measurement_rate; j++)
             {
                 uint64_t timestamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();    // timestamp in mictoseconds since epoch
                 float voltage = adc->read_voltage(i); //voltage of the channel in [V]
@@ -96,7 +103,7 @@ while(true)
     std::cout << "sum    : " << elapsed_ms.count() /1000.0 << " us"  << std::endl;
     std::cout << "-----------------------------------" << std::endl;
 
-    size_t periode_time_ns = (1.0 / MEASUREMENT_FREQUENCY) * 1000000000;
+    size_t periode_time_ns = (1.0 / m_sampling_rate) * 1000000000;
     auto timeToWait = std::chrono::nanoseconds(periode_time_ns) - std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed_ms);
     if(timeToWait > std::chrono::milliseconds::zero())
     {
