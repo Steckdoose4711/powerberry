@@ -11,8 +11,7 @@
 #include <vector>
 #include <mutex>
 
-// Defines
-#define DEFAULT_SPI_PIN 24
+
 
 
 
