@@ -16,6 +16,7 @@
     static double current_time_radiant = 0;
     static double max_amplitude = 0.5;
     static size_t sine_wave_frequency = 50;
+    static double offset_v = 2.5; // offset voltage for the sine wave
 
 adc_dummy::adc_dummy()
 {
@@ -25,6 +26,7 @@ adc_dummy::adc_dummy()
     for(size_t i = 0; i < nr_samples; i++)
     {
         double datapoint = max_amplitude * sin(current_time_radiant);
+        datapoint += offset_v;
         m_sine_wave.emplace_back(datapoint);
         current_time_radiant += ((2 * M_PI) / nr_samples);
     }
