@@ -25,6 +25,10 @@ services:
       - ./config:/config:ro
       - /sys:/app/sys
     privileged: true
+    environment:
+      CONFIG_PATH: /config/config.json
+      REDIS_HOST: powerberry-redis
+      REDIS_PORT: 6379
 
   # redis is used as an in-memory store between the two
   powerberry-redis:
