@@ -9,25 +9,32 @@
 #include "datastorage_redis.h"
 
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 datastorage_redis::datastorage_redis()
 {
-    set_connection_string("tcp://powerberry-redis:6379");
-    set_nr_devices(1);
-    size_t nr_channels = 8;
-    set_nr_channels(0, nr_channels);
-
-    for(size_t channel = 0; channel < nr_channels; channel++)
-    {
-        set_sample_frequency(0, channel, 100);
-    }
+    datastorage_redis("tcp://powerberry-redis:6379", 1, 3,100);
 }
 
 
 datastorage_redis::datastorage_redis(std::string const & connectionstring, size_t const number_devices, size_t const number_channels, size_t const sample_frequency)
 {
-    set_connection_string(connectionstring);
-    set_nr_devices(number_devices);
+    bool connectionSucceeded = false;
+
+    while(!connectionSucceeded)
+    {
+        try
+        {
+            set_connection_string(connectionstring);
+            set_nr_devices(number_devices);
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << "[ERROR] Redis cannot be reached " << e.what() << std::endl;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    }
 
     // set number of channel for each device
     for(size_t i = 0; i < number_devices; i++)
