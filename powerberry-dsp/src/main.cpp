@@ -22,6 +22,7 @@
 using namespace std;
 using namespace sw::redis;
 
+#define ADC0_Chipselect RPI_V2_GPIO_P1_24
 
 int main(int argc, char *argv[])
 {
@@ -34,8 +35,7 @@ int main(int argc, char *argv[])
     // redis must exist
     if(env_redis_host == nullptr || env_redis_port == nullptr)
     {
-        std::cerr << "Could not find environment variables REDIS_HOST or REDIS_PORT" << std::endl;
-        return;
+        throw "[ERROR]: Could not find environment variables REDIS_HOST or REDIS_PORT";
     }
 
     // check if config file path is set via command line argument
