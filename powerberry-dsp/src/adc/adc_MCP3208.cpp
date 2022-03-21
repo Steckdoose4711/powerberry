@@ -1,12 +1,12 @@
 /**
- * @file adc.h
+ * @file adc_MCP3208.h
  * @author Florian Atzenhofer
  * @date 20.03.2022
  * @brief Abstraction of an ADC [Implementation]
  *
  * This module provides the functioonality to read voltages from an ADC.
  */
-#include "adc.h"
+#include "adc_MCP3208.h"
 
 #include <stdlib.h>
 #include <math.h>
@@ -23,7 +23,7 @@ static uint8_t send_data[8][3] = {
                                 };
 
 
-adc::adc(std::shared_ptr<spi_wrapper> const spi, size_t const chip_select)
+adc_MCP3208::adc_MCP3208(std::shared_ptr<spi_wrapper> const spi, size_t const chip_select, float const vRef)
 {
     if(spi == nullptr)
     {
@@ -31,11 +31,11 @@ adc::adc(std::shared_ptr<spi_wrapper> const spi, size_t const chip_select)
     }
     m_spi = spi;
     m_chip_select = chip_select;
-    m_v_reference = DEFAULT_REFERENCE_VOLTAGE;
+    m_v_reference = vRef;
     m_resolution = DEFAULT_RESOLUTION;
 }
 
-float adc::read_voltage(size_t const channel)
+float adc_MCP3208::read_voltage(size_t const channel)
 {
 
     std::string errormessage = "[ERROR]: channel must be between 0 and " + std::to_string(DEFAULT_NUMBER_USED_CHANNELS - 1) + "!";
@@ -59,13 +59,13 @@ float adc::read_voltage(size_t const channel)
 }
 
 
-void adc::set_reference_voltage(float const v_reference)
+void adc_MCP3208::set_reference_voltage(float const v_reference)
 {
     m_v_reference = v_reference;
 }
 
 
-size_t adc::get_number_channels()
+size_t adc_MCP3208::get_number_channels()
 {
     return DEFAULT_NUMBER_USED_CHANNELS;
 }

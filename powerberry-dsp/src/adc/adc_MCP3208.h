@@ -1,7 +1,7 @@
-#ifndef ADC_H
-#define ADC_H
+#ifndef ADC_MCP3208_H
+#define ADC_MCP3208_H
 /**
- * @file adc.h
+ * @file adc_MCP3208.h
  * @author Florian Atzenhofer
  * @date 20.03.2022
  * @brief Abstraction of an ADC [Interface]
@@ -16,10 +16,9 @@
 
 
 #define DEFAULT_RESOLUTION 12           // the default resolution of the ADC is 12 Bit
-#define DEFAULT_REFERENCE_VOLTAGE 4.8   // the default reference voltage of the ADC is 4.8 V
 #define DEFAULT_NUMBER_USED_CHANNELS 8  // the default number of used channels is 8
 
-class adc : public adc_interface
+class adc_MCP3208 : public adc_interface
 {
 
     public:
@@ -27,8 +26,9 @@ class adc : public adc_interface
          * Initialize the ADC.
          * @param spi pointer to the SPI wrapper, which is needed to communicate with the ADC
          * @param chip_select pin for the chip select of the ADC
+         * @param v_reference reference voltage of the ADC
          */
-        adc(std::shared_ptr<spi_wrapper> const spi, size_t const chip_select);
+        adc_MCP3208(std::shared_ptr<spi_wrapper> const spi, size_t const chip_select, float const vRef);
 
         /**
          * Read voltages from a specific ADC Channel .
@@ -63,4 +63,4 @@ class adc : public adc_interface
 
 };
 
-#endif // ADC_H
+#endif // ADC_MCP3208_H
