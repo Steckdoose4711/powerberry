@@ -74,7 +74,10 @@ datastorage_redis::datastorage_redis(std::string const & connectionstring, size_
         #if ENABLE_DEBUG_INFOS == 1
             std::cout << redis_str << " " << measurement_str << std::endl;
         #endif
+
+        // store data to redis and guarantee that redis contains maximum 10000 entries per channel
         m_redis->lpush(redis_str, measurement_str);
+        m_redis->ltrim(redis_str, 0, 10000);
         channel_number++;
     }
 }
