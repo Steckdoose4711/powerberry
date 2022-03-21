@@ -20,7 +20,7 @@
 using namespace std;
 using namespace sw::redis;
 
-#define RELEASE_VERSION 0
+#define RELEASE_VERSION 1
 #define ADC0_Chipselect RPI_V2_GPIO_P1_18
 
 #if RELEASE_VERSION == 0
@@ -84,7 +84,7 @@ static void DSP_Deploy(int argc, char *argv[])
     std::shared_ptr<filter_interface> filter_instance = std::make_shared<filter_median>();
 
     //redis
-    std::shared_ptr<datastorage_interface> datastorage_instance = std::make_shared<datastorage_redis>("tcp://powerberry-redis:6379", 1, 8, 100);
+    std::shared_ptr<datastorage_interface> datastorage_instance = std::make_shared<datastorage_redis>("tcp://127.0.0.1:6379", 1, 8, 100);
 
     // controller
     // at first, we have to store our ADCs in a vector, because the controller-interface wants a vector...

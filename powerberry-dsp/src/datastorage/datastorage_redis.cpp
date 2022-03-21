@@ -77,7 +77,8 @@ void datastorage_redis::set_nr_devices(size_t const number_devices)
     std::string dev = "";
     for(size_t i = 0; i < number_devices; i++)
     {
-        dev += " " + std::to_string(i);
+        if(i != 0)  dev += " ";
+        dev += std::to_string(i);
     }
 
     m_redis->sadd("devices", dev);
@@ -94,7 +95,8 @@ void datastorage_redis::set_nr_channels(size_t const device, size_t const number
     std::string channels = "";
     for(size_t i = 0; i < number_channels; i++)
     {
-        channels += " " + std::to_string(i);
+        if(i != 0)  channels += " ";
+        channels += std::to_string(i);
     }
     
     m_redis->sadd("device:" + std::to_string(device) + ":channels", channels);
