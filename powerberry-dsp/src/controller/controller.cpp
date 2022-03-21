@@ -12,7 +12,7 @@
 #include <chrono>
 #include <iostream>
 
-
+#define ENABLE_DEBUG_INFOS 1
 
 controller::controller( std::vector<std::shared_ptr<adc_interface>> adc_list,
                         std::shared_ptr<filter_interface> p_filter,
@@ -96,13 +96,15 @@ while(true)
     auto end = std::chrono::high_resolution_clock::now();
     auto elapsed_ms = (end - start);
 
-    std::cout << "alloc  : " << time_alloc.count() /1000.0 << " us" << std::endl;
-    std::cout << "measure: " << time_measure.count() /1000.0 << " us"  << std::endl;
-    std::cout << "filter : " << time_filter.count() /1000.0 << " us"  << std::endl;
-    std::cout << "store  : " << time_store.count() /1000.0 << " us"  << std::endl;
-    std::cout << "sum    : " << elapsed_ms.count() /1000.0 << " us"  << std::endl;
-    std::cout << "-----------------------------------" << std::endl;
-
+    #if ENABLE_DEBUG_INFOS == 1
+        std::cout << "alloc  : " << time_alloc.count() /1000.0 << " us" << std::endl;
+        std::cout << "measure: " << time_measure.count() /1000.0 << " us"  << std::endl;
+        std::cout << "filter : " << time_filter.count() /1000.0 << " us"  << std::endl;
+        std::cout << "store  : " << time_store.count() /1000.0 << " us"  << std::endl;
+        std::cout << "sum    : " << elapsed_ms.count() /1000.0 << " us"  << std::endl;
+        std::cout << "-----------------------------------" << std::endl;
+    #endif
+    
     size_t periode_time_ns = (1.0 / m_sampling_rate) * 1000000000;
     auto timeToWait = std::chrono::nanoseconds(periode_time_ns) - std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed_ms);
     if(timeToWait > std::chrono::milliseconds::zero())

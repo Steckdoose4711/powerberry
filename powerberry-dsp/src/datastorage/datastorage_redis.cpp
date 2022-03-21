@@ -12,6 +12,10 @@
 #include <chrono>
 #include <thread>
 
+#define ENABLE_DEBUG_INFOS 1
+
+
+
 datastorage_redis::datastorage_redis()
 {
     datastorage_redis("tcp://powerberry-redis:6379", 1, 3,100);
@@ -21,19 +25,22 @@ datastorage_redis::datastorage_redis()
 datastorage_redis::datastorage_redis(std::string const & connectionstring, size_t const number_devices, size_t const number_channels, size_t const sample_frequency)
 {
     bool connectionSucceeded = false;
-
+    size_t trycounter = 0;
     while(!connectionSucceeded)
     {
         try
         {
             set_connection_string(connectionstring);
             set_nr_devices(number_devices);
+            connectionSucceeded = true;
+            std::cout << "[Info] Connection to redis server '" << connectionstring << "' established" << std::endl;
         }
         catch(const std::exception& e)
         {
-            std::cerr << "[ERROR] Redis cannot be reached " << e.what() << std::endl;
+            std::cerr << "[ERROR] Try(" << trycounter << "). Redis cannot be reached. " << e.what() << std::endl;
+            trycounter++;
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 
     // set number of channel for each device
@@ -63,11 +70,13 @@ datastorage_redis::datastorage_redis(std::string const & connectionstring, size_
         std::string measurement_str= std::to_string(timestamp) + ";" + std::to_string(value);
 
         std::string redis_str = "device:" + std::to_string(device_id) + ":channel:" + std::to_string(channel_number) + ":current";
+
+        #if ENABLE_DEBUG_INFOS == 1
+            std::cout << redis_str << " " << measurement_str << std::endl;
+        #endif
         m_redis->lpush(redis_str, measurement_str);
         channel_number++;
     }
-
-    //m_redis->lpush("device:0:channel:0:current", ss.str());
 }
 
 
