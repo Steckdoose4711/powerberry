@@ -19,6 +19,8 @@ services:
     volumes:
       - ./powerberry-dsp:/app
       - ./config:/config
+    environment:
+      EMULATE_HARDWARE: emu_hw_true    
 
   powerberry-redis:
     extends:
