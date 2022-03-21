@@ -99,18 +99,43 @@ static void DSP_Deploy(int argc, char *argv[])
     // Creating instances of the needed DSP Blocks for real ADC
     config_Manager json_config(config_file_path);
 
-    // spi
-    std::shared_ptr<spi_wrapper> spi_wrapper_instance = std::make_shared<spi_wrapper>();
 
-    // adc
+
+    // SPI and ADC
     // at the moment, only one ADC is allowed
     if(json_config.get_NrADCdevices() > 1) throw std::runtime_error("Only one ADC device is allowed at the momend. Extend config file within an array of chipselect pins to allow more than one ADC device.");
     
     std::vector<std::shared_ptr<adc_interface>> adcs;
-    for(size_t i = 0; i < json_config.get_NrADCdevices(); i++)
+    // check, if hardware must be emulated
+    auto env_emulate_HW = std::getenv("EMULATE_HARDWARE");
+    std::string not_emulated("emu_hw_false");
+    std::string emulated("emu_hw_true");
+    
+    if(env_emulate_HW == nullptr || (not_emulated.compare(env_emulate_HW) == 0))
     {
-        std::shared_ptr<adc_interface> adc_instance = std::make_shared<adc_MCP3208>(spi_wrapper_instance, ADC0_Chipselect, json_config.get_vRef_V());
-        adcs.emplace_back(adc_instance);
+        // spi
+        std::shared_ptr<spi_wrapper> spi_wrapper_instance = std::make_shared<spi_wrapper>();
+
+        // Hardware must not be emulated -> create real ADCs
+        for(size_t i = 0; i < json_config.get_NrADCdevices(); i++)
+        {
+            std::shared_ptr<adc_interface> adc_instance = std::make_shared<adc_MCP3208>(spi_wrapper_instance, ADC0_Chipselect, json_config.get_vRef_V());
+            adcs.emplace_back(adc_instance);
+        }
+    }
+    else if(emulated.compare(env_emulate_HW) == 0)
+    {
+        // we have to emulate the hardware
+                // Hardware must not be emulated -> create real ADCs
+        for(size_t i = 0; i < json_config.get_NrADCdevices(); i++)
+        {
+            std::shared_ptr<adc_interface> adc_instance = std::make_shared<adc_dummy>();
+            adcs.emplace_back(adc_instance);
+        }
+    }
+    else
+    {
+        throw std::runtime_error("Environment variable EMULATE_HARDWARE must be set to true or false.");
     }
 
     // filter
@@ -142,12 +167,6 @@ static void DSP_Deploy(int argc, char *argv[])
 
     controller_instance->start_DSP();
 
-
-
-    while(true)
-    {
-
-    }
 }
 #endif
 
