@@ -8,96 +8,133 @@
 #include "config_Manager.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
-
-
-/**
-* at the first run, read the complete file
-* @param path pth to the config file
-* @param config file is a json file
-* @return NONE
-*/
-static void read_config_initialiy(std::string const & path, nlohmann::json & config);
-
-/**
-* at the second and all other run, only refresh the changeable values
-* @param path pth to the config file
-* @param config file is a json file
-* @return NONE
-*/
-static void refreshConfig(std::string const & path, nlohmann::json & config);
-
-
-// refresh config
-void config_Manager::readConfig()
+config_Manager::config_Manager(std::string const & path)
 {
-    if(m_path_to_config.empty())
+    m_path_to_config = path;
+    m_config = std::make_shared<nlohmann::json>();
+
+    try
     {
-        std::cerr << "No path to config file given. Please call readConfig(path)" << std::endl;
-        return;
+        // open config file and serialize it to the configuration
+        std::ifstream configstream (path);
+        if(configstream.is_open())
+        {
+            configstream >> *m_config;
+        }
+        else
+        {
+            throw "Could not open config file.";
+        }
     }
-    readConfig(m_path_to_config);
+    catch(std::exception const &e)
+    {
+        throw "[ERROR] Could not open config file";
+    }
 }
 
-// read config initialy from file or refresh config
-void config_Manager::readConfig(std::string const &path)
+void config_Manager::refreshConfig()
 {
-    // set path and red config
-    if(m_path_to_config.empty())
+    try
     {
-        m_path_to_config = path;
-        read_config_initialiy(m_path_to_config, m_config);
+        // open config file and serialize it to the configuration
+        std::ifstream configstream (m_path_to_config);
+        if(configstream.is_open())
+        {
+            configstream >> *m_config;
+        }
+        else
+        {
+            std::cerr << "Could not refresh config file because file was removed from filesystem." << std::endl;
+        }
+    }
+    catch(std::exception const &e)
+    {
+        std::cerr << "Could not refresh config file because: " << e.what() << std::endl;
+    }
+}
+
+
+size_t config_Manager::strToSize_t(std::string const &str)
+{
+    try
+    {
+        std::string raw_val = m_config->at("str");
+        std::stringstream  sstream(raw_val);
+        size_t converted_value = 0;
+        sstream >> converted_value;
+        return converted_value;
+    
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+        throw "[ERROR] Could not get measurement rate from config file. Please check config file.";
+    }
+}
+
+float config_Manager::strTofloat(std::string const &str)
+{
+    try
+    {
+        std::string raw_val = m_config->at("str");
+        std::stringstream  sstream(raw_val);
+        float converted_value = 0;
+        sstream >> converted_value;
+        return converted_value;
+    
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+        throw "[ERROR] Could not get measurement rate from config file. Please check config file.";
+    }
+}
+
+
+
+size_t config_Manager::get_NrADCdevices()
+{
+    return strToSize_t("number_adc_devices");
+}
+
+size_t config_Manager::get_NrChannelsPerADC()
+{
+    return strToSize_t("number_channels_per_device");
+}
+
+float config_Manager::get_vRef_V()
+{
+    return strTofloat("adc_reference_voltage_V");
+}
+
+
+filter_type config_Manager::getFilterType_dsp()
+{
+    std::string filter_type_str = m_config->at("dsp_filter_type");
+    if(filter_type_str == "median")
+    {
+        return filter_type::median;
+    }
+    else if(filter_type_str == "mean")
+    {
+        return filter_type::mean;
     }
     else
     {
-        refreshConfig(m_path_to_config, m_config);
-    }
-}
-
-static void read_config_initialiy(std::string const & path, nlohmann::json & config)
-{
-    try
-    {
-        // open config file and serialize it to the configuration
-        std::ifstream configstream (path);
-        if(configstream.is_open())
-        {
-            configstream >> config;
-        }
-        else
-        {
-            std::cerr << "Could not open config file." << std::endl;
-        }
-    }
-    catch(std::exception const &e)
-    {
-        std::cerr << "Error while serializing config file: " << e.what() << std::endl;
+        throw "[ERROR] Filter type is not supported (Only 'median' or 'mean' is supported at the moment!). Please check config file.";
     }
 }
 
 
-static void refreshConfig(std::string const & path, nlohmann::json & config)
+size_t config_Manager::getMeasurementRate_dsp()
 {
-    try
-    {
-        // open config file and serialize it to the configuration
-        std::ifstream configstream (path);
-        if(configstream.is_open())
-        {
-            nlohmann::json config_new;
-            configstream >> config_new;
-            config["measurement_rate_dsp"] = config_new["measurement_rate_dsp"];
-            config["sampling_rate_dsp"] = config_new["sampling_rate_dsp"];
-            config["voltage_reference_V"] = config_new["voltage_reference_V"];
+    return strToSize_t("measurement_rate_dsp");
+}
 
-        }
-        else
-        {
-            std::cout << "Could not open config file." << std::endl;
-        }
-    }
-    catch(std::exception const &e)
-    {
-        std::cout << "Error while reading config file: " << e.what() << std::endl;
-    }
+
+size_t config_Manager::getSamplingRate_dsp()
+{
+    return strToSize_t("sampling_rate");
 }
