@@ -15,6 +15,11 @@
 
 typedef std::tuple <uint64_t, float> measurement_t;
 
+enum class filter_type
+{
+    median,
+    mean
+};
 
 /*! \class FILTER_interface
     \brief Interface for different filters.
