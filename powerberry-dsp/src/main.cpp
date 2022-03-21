@@ -10,9 +10,11 @@
 #include "adc/adc_dummy.h"
 #include "config_Manager.h"
 #include "spi/spi_wrapper.h"
-#include "adc/adc.h"
+#include "adc/adc_MCP3208.h"
 #include "filters/filter_interface.h"
 #include "filters/filter_median.h"
+#include "filters/filter_mean.h"
+
 #include "datastorage/datastorage_interface.h"
 #include "datastorage/datastorage_redis.h"
 #include "controller/controller.h"
@@ -67,32 +69,75 @@ int main(int argc, char *argv[])
 #if RELEASE_VERSION == 1
 static void DSP_Deploy(int argc, char *argv[])
 {
-    std::string config_file_path = "/srv/powerberry/config.json";
+    std::string config_file_path = "/config/config.json";
+    auto env_config_file_path = std::getenv("CONFIG_PATH");
+    auto env_redis_host = std::getenv("REDIS_HOST");
+    auto env_redis_port = std::getenv("REDIS_PORT");
+
+    // redis must exist
+    if(env_redis_host == nullptr || env_redis_port == nullptr)
+    {
+        std::cerr << "Could not find environment variables REDIS_HOST or REDIS_PORT" << std::endl;
+        return;
+    }
+
+    // check if config file path is set via command line argument
     if(argc > 1)
     {
         config_file_path = argv[1];
     }
-
-    //TODO: finish config file implementation
+    // look if environment variable with path to config file is set   
+    else if(env_config_file_path != nullptr)
+    {
+        config_file_path = env_config_file_path;
+    }
+    else
+    {
+        std::cout << "[INFO]: No path to configfile was specified. Using default path: " << config_file_path << std::endl; 
+    }
 
     // Creating instances of the needed DSP Blocks for real ADC
-    config_Manager json_config;
+    config_Manager json_config(config_file_path);
 
-    // spi, adc and median filter
+    // spi
     std::shared_ptr<spi_wrapper> spi_wrapper_instance = std::make_shared<spi_wrapper>();
-    std::shared_ptr<adc_interface> adc0_instance = std::make_shared<adc>(spi_wrapper_instance, ADC0_Chipselect);
-    std::shared_ptr<filter_interface> filter_instance = std::make_shared<filter_median>();
 
-    //redis
-    std::shared_ptr<datastorage_interface> datastorage_instance = std::make_shared<datastorage_redis>("tcp://127.0.0.1:6379", 1, 8, 100);
+    // adc
+    // at the moment, only one ADC is allowed
+    if(json_config.get_NrADCdevices() > 1) throw std::runtime_error("Only one ADC device is allowed at the momend. Extend config file within an array of chipselect pins to allow more than one ADC device.");
+    
+    std::vector<std::shared_ptr<adc_interface>> adcs;
+    for(size_t i = 0; i < json_config.get_NrADCdevices(); i++)
+    {
+        std::shared_ptr<adc_interface> adc_instance = std::make_shared<adc_MCP3208>(spi_wrapper_instance, ADC0_Chipselect, json_config.get_vRef_V());
+        adcs.emplace_back(adc_instance);
+    }
+
+    // filter
+    std::shared_ptr<filter_interface> filter_instance;
+    if(json_config.getFilterType_dsp() == filter_type::mean)
+    {
+        filter_instance = std::make_shared<filter_mean>();
+    }
+    else if(json_config.getFilterType_dsp() == filter_type::median)
+    {
+        filter_instance = std::make_shared<filter_median>();
+    }
+
+    // redis
+    std::string redis_connectionstring = "tcp://" + std::string(env_redis_host) + ":" + std::string(env_redis_port);
+    std::shared_ptr<datastorage_interface> datastorage_instance = std::make_shared<datastorage_redis>(redis_connectionstring, 
+                                                                                                      json_config.get_NrADCdevices(), 
+                                                                                                      json_config.get_NrChannelsPerADC(),
+                                                                                                      json_config.getSamplingRate_dsp());
 
     // controller
-    // at first, we have to store our ADCs in a vector, because the controller-interface wants a vector...
-    std::vector<std::shared_ptr<adc_interface>> adcs;
-    adcs.emplace_back(adc0_instance);
-    std::shared_ptr<controller> controller_instance = std::make_shared<controller>(adcs, filter_instance, datastorage_instance);
+    std::shared_ptr<controller> controller_instance = std::make_shared<controller>( adcs, 
+                                                                                    filter_instance, 
+                                                                                    datastorage_instance,
+                                                                                    json_config.getMeasurementRate_dsp(),
+                                                                                    json_config.getSamplingRate_dsp());
 
-    json_config.readConfig(config_file_path);
 
 
     controller_instance->start_DSP();
