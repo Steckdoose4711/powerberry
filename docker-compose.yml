@@ -26,3 +26,21 @@ services:
     extends:
       file: docker-compose.prod.yml
       service: powerberry-redis
+
+  powerberry-influx:
+    container_name: powerberry-influxdb-dev
+    image: influxdb:latest
+    restart: always
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./influxdb:/var/lib/influxdb
+
+  powerberry-grafana:
+    container_name: powerberry-grafana-dev
+    image: grafana/grafana:latest
+    restart: always    
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana:/var/lib/grafana
