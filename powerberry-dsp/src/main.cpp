@@ -8,7 +8,7 @@
 
 #include "adc/adc_interface.h"
 #include "adc/adc_dummy.h"
-#include "config_Manager.h"
+#include "config_manager/config_Manager.h"
 #include "spi/spi_wrapper.h"
 #include "adc/adc_MCP3208.h"
 #include "filters/filter_interface.h"
@@ -70,6 +70,7 @@ int main(int argc, char *argv[])
     
     if(env_emulate_HW == nullptr || (not_emulated.compare(env_emulate_HW) == 0))
     {
+        std::cout << "[INFO]: Using real Hardware" << std::endl;
         // spi
         std::shared_ptr<spi_wrapper> spi_wrapper_instance = std::make_shared<spi_wrapper>();
 
@@ -82,6 +83,7 @@ int main(int argc, char *argv[])
     }
     else if(emulated.compare(env_emulate_HW) == 0)
     {
+        std::cout << "[INFO]: Emulating Hardware" << std::endl;
         // we have to emulate the hardware
                 // Hardware must not be emulated -> create real ADCs
         for(size_t i = 0; i < json_config.get_NrADCdevices(); i++)
