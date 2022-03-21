@@ -55,45 +55,6 @@ void config_Manager::refreshConfig()
     }
 }
 
-
-size_t config_Manager::strToSize_t(std::string const &str)
-{
-    try
-    {
-        std::string raw_val = m_config->at("str");
-        std::stringstream  sstream(raw_val);
-        size_t converted_value = 0;
-        sstream >> converted_value;
-        return converted_value;
-    
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-        throw "[ERROR] Could not get measurement rate from config file. Please check config file.";
-    }
-}
-
-float config_Manager::strTofloat(std::string const &str)
-{
-    try
-    {
-        std::string raw_val = m_config->at("str");
-        std::stringstream  sstream(raw_val);
-        float converted_value = 0;
-        sstream >> converted_value;
-        return converted_value;
-    
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-        throw "[ERROR] Could not get measurement rate from config file. Please check config file.";
-    }
-}
-
-
-
 size_t config_Manager::get_NrADCdevices()
 {
     return strToSize_t("number_adc_devices");
@@ -137,4 +98,41 @@ size_t config_Manager::getMeasurementRate_dsp()
 size_t config_Manager::getSamplingRate_dsp()
 {
     return strToSize_t("sampling_rate");
+}
+
+
+size_t config_Manager::strToSize_t(std::string const &str)
+{
+    try
+    {
+        std::string raw_val = m_config->at(str);
+        std::stringstream  sstream(raw_val);
+        size_t converted_value = 0;
+        sstream >> converted_value;
+        return converted_value;
+    
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "[ERROR] Could not get " + str + " from config.json " <<  e.what() << '\n';
+        throw "[ERROR] Config file error.";
+    }
+}
+
+float config_Manager::strTofloat(std::string const &str)
+{
+    try
+    {
+        std::string raw_val = m_config->at(str);
+        std::stringstream  sstream(raw_val);
+        float converted_value = 0;
+        sstream >> converted_value;
+        return converted_value;
+    
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "[ERROR] Could not get " + str + " from config.json " <<  e.what() << '\n';
+        throw "[ERROR] Config file error.";
+    }
 }
