@@ -28,7 +28,7 @@ services:
       service: powerberry-redis
 
   powerberry-influx:
-    container_name: powerberry-influxdb-dev
+    container_name: powerberry-influxdb
     image: influxdb:1.8.10
     restart: always
     ports:
@@ -37,7 +37,7 @@ services:
       - ./influxdb:/var/lib/influxdb
 
   powerberry-grafana:
-    container_name: powerberry-grafana-dev
+    container_name: powerberry-grafana
     image: grafana/grafana:8.4.6
     restart: always    
     ports:
