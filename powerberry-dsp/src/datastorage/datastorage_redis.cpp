@@ -100,7 +100,7 @@ void datastorage_redis::set_nr_devices(size_t const number_devices)
         dev.insert(std::to_string(i));
     }
 
-    m_redis->sadd("devices", dev);
+    m_redis->sadd("devices", dev.begin(), dev.end());
 }
 
 void datastorage_redis::set_nr_channels(size_t const device, size_t const number_channels)
@@ -118,7 +118,7 @@ void datastorage_redis::set_nr_channels(size_t const device, size_t const number
         channels.insert(std::to_string(i));
     }
     std::cout << "[Info]: set deice and channels. Decive: " << device << "; channels: " << channels << std::endl;
-    m_redis->sadd("device:" + std::to_string(device) + ":channels", channels);
+    m_redis->sadd("device:" + std::to_string(device) + ":channels", channels.begin(), channels.end());
 }
 
 void datastorage_redis::set_sample_frequency(size_t const device, size_t const channel, size_t const sample_frequency)
