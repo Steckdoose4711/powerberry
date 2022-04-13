@@ -7,5 +7,5 @@
   "dsp_filter_type" : "median",
   "dsp_measurement_rate" : "3",
   "dsp_sampling_rate" : "100",
-  "app_voltage_reference" :
+  "app_voltage_reference" : "230"
 }
