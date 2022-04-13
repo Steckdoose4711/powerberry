@@ -70,7 +70,7 @@ datastorage_redis::datastorage_redis(std::string const & connectionstring, size_
         float value = std::get<1>(*it);
         std::string measurement_str= std::to_string(timestamp) + ";" + std::to_string(value);
 
-        std::string redis_str = "device:" + std::to_string(device_id) + ":channel:" + std::to_string(channel_number) + ":current";
+        std::string redis_str = "device:" + std::to_string(device_id) + ":channel:" + std::to_string(channel_number) + ":voltage";
 
         #if ENABLE_DEBUG_INFOS == 1
             std::cout << redis_str << " " << measurement_str << std::endl;

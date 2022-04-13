@@ -44,8 +44,11 @@ class Cache:
         return int(sample_rate) if sample_rate else None
 
     def get_number_of_samples(self, device: str, channel: str) -> int:
-        return self.redis.llen(f"device:{device}:channel:{channel}:current")
+        return self.redis.llen(f"device:{device}:channel:{channel}:voltage")
 
     def get_samples(self, device: str, channel: str, count: int) -> npt.NDArray[np.float32]:
-        samples = self.redis.rpop(f"device:{device}:channel:{channel}:current", count)
-        return np.array(samples, dtype=np.float32)
+        samples = self.redis.rpop(f"device:{device}:channel:{channel}:voltage", count)
+        x, y = zip(*(e.split(";") for e in samples))
+        timestamps = np.array(x, dtype=np.int64)
+        voltages = np.array(y, dtype=np.float32)
+        return timestamps, voltages
