@@ -3,5 +3,7 @@
 **/.vscode/*
 !**/.vscode/launch.json
 !**/.vscode/tasks.json
-/grafana # folder for grafana mounts
-/influxdb # folder for influx mounts
+
+# grafana and influx mounts
+/grafana
+/influxdb

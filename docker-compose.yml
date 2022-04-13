@@ -29,7 +29,7 @@ services:
 
   powerberry-influx:
     container_name: powerberry-influxdb-dev
-    image: influxdb:latest
+    image: influxdb:1.8.10
     restart: always
     ports:
       - "8086:8086"
@@ -38,7 +38,7 @@ services:
 
   powerberry-grafana:
     container_name: powerberry-grafana-dev
-    image: grafana/grafana:latest
+    image: grafana/grafana:8.4.6
     restart: always    
     ports:
       - "3000:3000"
