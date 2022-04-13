@@ -128,8 +128,8 @@ void datastorage_redis::set_sample_frequency(size_t const device_id, size_t cons
         std::cout << "[ERROR:] Redis is already initialized" << std::endl;
         return;
     }   
-    std::cout << "[Info]: Device: " << device << "; channel " << channel << "; Set sample frequency: " << sample_frequency << std::endl;
-    m_redis->set("device:" + std::to_string(device) + ":channel:" + std::to_string(channel) + ":sample_rate", std::to_string(sample_frequency));
+    std::cout << "[Info]: Device: " << device_id << "; channel " << channel << "; Set sample frequency: " << sample_frequency << std::endl;
+    m_redis->set("device:" + std::to_string(device_id) + ":channel:" + std::to_string(channel) + ":sample_rate", std::to_string(sample_frequency));
 }
 
 void datastorage_redis::set_connection_string(std::string const & connectionstring)
