@@ -44,7 +44,7 @@ Moreover, a DSP container with a C++ toolchain is used without the app being com
 
 Read [REDIS.md](REDIS.md) to learn more about the cache data structure.
 
-### Documentation for configuration.json with default values
+### :pencil2: Documentation for configuration.json with default values
 ```json
 {
   "influx_host" : "powerberry-influx", /* name of the influxdb into which the processed data will be written */
