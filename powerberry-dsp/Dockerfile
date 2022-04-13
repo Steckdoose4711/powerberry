@@ -1,4 +1,3 @@
-
 FROM debian:bullseye AS dev
 WORKDIR /app
 
@@ -6,10 +5,7 @@ WORKDIR /app
 # VOLUME /app
 
 RUN apt-get update && \
-    apt-get install -y build-essential cmake gdb git && \
-	#install tools for spi library (bcm2835)
-	apt-get install wget && \
-	apt-get install nano
+    apt-get install -y build-essential cmake gdb git wget nano
 
 RUN cd /tmp && \
     git clone --branch v1.0.2 https://github.com/redis/hiredis.git && \

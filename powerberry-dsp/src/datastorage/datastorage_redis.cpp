@@ -103,7 +103,7 @@ void datastorage_redis::set_nr_devices(size_t const number_devices)
     m_redis->sadd("devices", dev.begin(), dev.end());
 }
 
-void datastorage_redis::set_nr_channels(size_t const device, size_t const number_channels)
+void datastorage_redis::set_nr_channels(size_t const device_id, size_t const number_channels)
 {
     if(m_is_initialized)
     {
@@ -117,19 +117,19 @@ void datastorage_redis::set_nr_channels(size_t const device, size_t const number
     {
         channels.insert(std::to_string(i));
     }
-    std::cout << "[Info]: set deice and channels. Device: " << device << "; channels 0 .. " << number_channels - 1 << std::endl;
-    m_redis->sadd("device:" + std::to_string(device) + ":channels", channels.begin(), channels.end());
+    std::cout << "[Info]: set deice and channels. Device: " << device_id << "; channels 0 .. " << number_channels - 1 << std::endl;
+    m_redis->sadd("device:" + std::to_string(device_id) + ":channels", channels.begin(), channels.end());
 }
 
-void datastorage_redis::set_sample_frequency(size_t const device, size_t const channel, size_t const sample_frequency)
+void datastorage_redis::set_sample_frequency(size_t const device_id, size_t const channel, size_t const sample_frequency)
 {
     if(m_is_initialized)
     {
         std::cout << "[ERROR:] Redis is already initialized" << std::endl;
         return;
     }   
-    std::cout << "[Info]: Device: " << device << "; channel " << channel << "; Set sample frequency: " << sample_frequency << std::endl;
-    m_redis->set("device:" + std::to_string(device) + ":channel:" + std::to_string(channel) + ":sample_rate", std::to_string(sample_frequency));
+    std::cout << "[Info]: Device: " << device_id << "; channel " << channel << "; Set sample frequency: " << sample_frequency << std::endl;
+    m_redis->set("device:" + std::to_string(device_id) + ":channel:" + std::to_string(channel) + ":sample_rate", std::to_string(sample_frequency));
 }
 
 void datastorage_redis::set_connection_string(std::string const & connectionstring)

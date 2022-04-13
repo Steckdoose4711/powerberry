@@ -10,8 +10,8 @@ services:
     volumes:
       - ./config:/config:ro
     environment:
-      CONFIG_PATH: /config/config.json
-      REDIS_HOST: powerberry-redis
+      CONFIG_PATH: /config/config.json # path of the configurationfile for the app
+      REDIS_HOST: powerberry-redis # hostname for the redis container
 
   # the dsp reads the hardware sensor
   powerberry-dsp:
@@ -26,9 +26,9 @@ services:
       - /sys:/app/sys
     privileged: true
     environment:
-      CONFIG_PATH: /config/config.json
-      REDIS_HOST: powerberry-redis
-      REDIS_PORT: 6379
+      CONFIG_PATH: /config/config.json # path of the configurationfile for the app
+      REDIS_HOST: powerberry-redis # hostname for the redis container
+      REDIS_PORT: 6379 # port for the redis container
 
   # redis is used as an in-memory store between the two
   powerberry-redis:
