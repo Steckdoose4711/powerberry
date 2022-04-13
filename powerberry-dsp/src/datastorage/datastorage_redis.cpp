@@ -117,7 +117,7 @@ void datastorage_redis::set_nr_channels(size_t const device, size_t const number
         if(i != 0)  channels += " ";
         channels += std::to_string(i);
     }
-    
+    std::cout << "[Info]: set deice and channels. Decive: " << device << "; channels: " << channels << std::endl;
     m_redis->sadd("device:" + std::to_string(device) + ":channels", channels);
 }
 
@@ -128,7 +128,7 @@ void datastorage_redis::set_sample_frequency(size_t const device, size_t const c
         std::cout << "[ERROR:] Redis is already initialized" << std::endl;
         return;
     }   
-
+    std::cout << "[Info]: Device: " << device << "; channel " << channel << "; Set sample frequency: " << sample_frequency << std::endl;
     m_redis->set("device:" + std::to_string(device) + ":channel:" + std::to_string(channel) + ":sample_rate", std::to_string(sample_frequency));
 }
 
