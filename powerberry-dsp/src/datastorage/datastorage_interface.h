@@ -46,12 +46,12 @@ class datastorage_interface
 
         /**
          * Setting the number of Samples for the datastorage
-         * @param device  number of device, which channels should be set
+         * @param device_id  number of device, which channels should be set
          * @param channel  channel, which channels should be set
          * @param number_samples sample_frequency of theadc
          * @return NONE
          */
-        virtual void set_sample_frequency(size_t const device, size_t const channel, size_t const sample_frequency) = 0;
+        virtual void set_sample_frequency(size_t const device_id, size_t const channel, size_t const sample_frequency) = 0;
 
 
 };
