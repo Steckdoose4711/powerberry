@@ -12,7 +12,7 @@
 #include <chrono>
 #include <iostream>
 
-#define ENABLE_DEBUG_INFOS 1
+#define ENABLE_DEBUG_INFOS 0
 
 controller::controller( std::vector<std::shared_ptr<adc_interface>> adc_list,
                         std::shared_ptr<filter_interface> p_filter,
