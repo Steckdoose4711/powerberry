@@ -57,17 +57,17 @@ void config_Manager::refreshConfig()
 
 size_t config_Manager::get_NrADCdevices()
 {
-    return strToSize_t("number_adc_devices");
+    return strToSize_t("dsp_number_adc_devices");
 }
 
 size_t config_Manager::get_NrChannelsPerADC()
 {
-    return strToSize_t("number_channels_per_device");
+    return strToSize_t("dsp_number_channels_per_device");
 }
 
 float config_Manager::get_vRef_V()
 {
-    return strTofloat("adc_reference_voltage_V");
+    return strTofloat("dsp_adc_reference_voltage_V");
 }
 
 
@@ -91,13 +91,13 @@ filter_type config_Manager::getFilterType_dsp()
 
 size_t config_Manager::getMeasurementRate_dsp()
 {
-    return strToSize_t("measurement_rate_dsp");
+    return strToSize_t("dsp_measurement_rate");
 }
 
 
 size_t config_Manager::getSamplingRate_dsp()
 {
-    return strToSize_t("sampling_rate");
+    return strToSize_t("dsp_sampling_rate");
 }
 
 

@@ -1,11 +1,11 @@
 {
   "influx_host" : "powerberry-influx",
   "influx_port" : "8086",
-  "number_adc_devices" : "1",
-  "number_channels_per_device" : "3",
-  "adc_reference_voltage_V" : "4.8",
+  "dsp_number_adc_devices" : "1",
+  "dsp_number_channels_per_device" : "3",
+  "dsp_adc_reference_voltage_V" : "4.8",
   "dsp_filter_type" : "median",
-  "measurement_rate_dsp" : "3",
-  "sampling_rate" : "100",
-  "voltage_reference" : "228.0"
+  "dsp_measurement_rate" : "3",
+  "dsp_sampling_rate" : "100",
+  "app_voltage_reference" :
 }
