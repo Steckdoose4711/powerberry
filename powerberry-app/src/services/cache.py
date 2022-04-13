@@ -48,4 +48,7 @@ class Cache:
 
     def get_samples(self, device: str, channel: str, count: int) -> npt.NDArray[np.float32]:
         samples = self.redis.rpop(f"device:{device}:channel:{channel}:voltage", count)
-        return np.array(samples, dtype=np.float32)
+        x, y = zip(*(e.split(";") for e in samples))
+        timestamps = np.array(x, dtype=np.int64)
+        voltages = np.array(y, dtype=np.float32)
+        return timestamps, voltages

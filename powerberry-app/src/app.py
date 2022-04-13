@@ -83,11 +83,11 @@ class App:
 
         # retrieve full blocks only
         num_blocks = num_samples // sample_rate
-        arr = self.cache.get_samples(dev, ch, num_blocks * sample_rate)
-        arr = arr.reshape(-1, sample_rate)
+        ts, volt = self.cache.get_samples(dev, ch, num_blocks * sample_rate)
+        ts, volt = ts.reshape(-1, sample_rate), volt.reshape(-1, sample_rate)
 
         log.info(
             f"read {num_blocks} blocks (at {sample_rate} Hz each) "
             f"from {dev}:{ch} "
-            f"(mean values: {arr.mean(axis=1)})"
+            f"(mean values: {volt.mean(axis=1)} at times {ts.min()} .. {ts.max()})"
         )
