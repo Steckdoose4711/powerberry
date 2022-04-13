@@ -8,6 +8,7 @@
 
 #include "datastorage_redis.h"
 
+#include <unordered_set>
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -92,18 +93,17 @@ void datastorage_redis::set_nr_devices(size_t const number_devices)
         return;
     }   
 
-    // build string for adding multiple devices
-    std::string dev = "";
+    // build set with device ids
+    std::unordered_set<std::string> dev = {};
     for(size_t i = 0; i < number_devices; i++)
     {
-        if(i != 0)  dev += " ";
-        dev += std::to_string(i);
+        dev.insert(std::to_string(i));
     }
 
-    m_redis->sadd("devices", dev);
+    m_redis->sadd("devices", dev.begin(), dev.end());
 }
 
-void datastorage_redis::set_nr_channels(size_t const device, size_t const number_channels)
+void datastorage_redis::set_nr_channels(size_t const device_id, size_t const number_channels)
 {
     if(m_is_initialized)
     {
@@ -111,14 +111,14 @@ void datastorage_redis::set_nr_channels(size_t const device, size_t const number
         return;
     }   
 
-    std::string channels = "";
+    // build set with channel ids
+    std::unordered_set<std::string> channels = {};
     for(size_t i = 0; i < number_channels; i++)
     {
-        if(i != 0)  channels += " ";
-        channels += std::to_string(i);
+        channels.insert(std::to_string(i));
     }
-    std::cout << "[Info]: set deice and channels. Device: " << device << "; channels: " << channels << std::endl;
-    m_redis->sadd("device:" + std::to_string(device) + ":channels", channels);
+    std::cout << "[Info]: set deice and channels. Device: " << device_id << "; channels 0 .. " << number_channels - 1 << std::endl;
+    m_redis->sadd("device:" + std::to_string(device_id) + ":channels", channels.begin(), channels.end());
 }
 
 void datastorage_redis::set_sample_frequency(size_t const device_id, size_t const channel, size_t const sample_frequency)
