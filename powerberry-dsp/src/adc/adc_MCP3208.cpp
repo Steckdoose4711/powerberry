@@ -43,19 +43,19 @@ float adc_MCP3208::read_voltage(size_t const channel)
     {
         throw errormessage;
     }
-        // make them static to do not have to create a new object every time
+    // make them static to do not have to create a new object every time
 
-        static uint8_t read_data[] = {0x00, 0x00 , 0x00 };
+    static uint8_t read_data[] = {0x00, 0x00 , 0x00 };
 
-        // reading three bytes from the ADC is necessary, because the ADC has a 12 bit resolution and needs some time to sample the voltage
-        // the command specifies the number of the channel which is used and is stored in a lookup table for each channel
-        m_spi->spi_transfer(send_data[channel], read_data, m_chip_select, sizeof(read_data));
+    // reading three bytes from the ADC is necessary, because the ADC has a 12 bit resolution and needs some time to sample the voltage
+    // the command specifies the number of the channel which is used and is stored in a lookup table for each channel
+    m_spi->spi_transfer(send_data[channel], read_data, m_chip_select, sizeof(read_data));
 
-        // merge the read bytes to the measured ADC Digits (0xFFF = 12 bit)
-        uint32_t measured_digits = ((read_data[1] << 8) | read_data[2]) & 0x00000FFF;
+    // merge the read bytes to the measured ADC Digits (0xFFF = 12 bit)
+    uint32_t measured_digits = ((read_data[1] << 8) | read_data[2]) & 0x00000FFF;
 
-        float voltage = ((measured_digits * 1.0) / pow(2, m_resolution)) * m_v_reference;
-        return voltage;
+    float voltage = ((measured_digits * 1.0) / pow(2, m_resolution)) * m_v_reference;
+    return voltage;
 }
 
 
