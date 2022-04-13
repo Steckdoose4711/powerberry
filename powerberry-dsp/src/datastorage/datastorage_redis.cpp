@@ -117,7 +117,7 @@ void datastorage_redis::set_nr_channels(size_t const device, size_t const number
         if(i != 0)  channels += " ";
         channels += std::to_string(i);
     }
-    std::cout << "[Info]: set deice and channels. Decive: " << device << "; channels: " << channels << std::endl;
+    std::cout << "[Info]: set deice and channels. Device: " << device << "; channels: " << channels << std::endl;
     m_redis->sadd("device:" + std::to_string(device) + ":channels", channels);
 }
 
