@@ -20,7 +20,7 @@ services:
       - ./powerberry-dsp:/app
       - ./config:/config
     environment:
-      EMULATE_HARDWARE: emu_hw_true    
+      EMULATE_HARDWARE: emu_hw_true    # use this environment var to specify, if the container runs with emulated or real hardware. [emu_hw_true = emulate hardware, emu_hw_false = real hardware]
 
   powerberry-redis:
     extends:
