@@ -8,6 +8,7 @@
 
 #include "datastorage_redis.h"
 
+#include <unordered_set>
 #include <iostream>
 #include <chrono>
 #include <thread>
