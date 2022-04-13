@@ -37,9 +37,9 @@ adc_MCP3208::adc_MCP3208(std::shared_ptr<spi_wrapper> const spi, size_t const ch
 
 float adc_MCP3208::read_voltage(size_t const channel)
 {
-    std::string errormessage = "[ERROR]: channel must be between 0 and " + std::to_string(DEFAULT_NUMBER_USED_CHANNELS - 1) + "!";
     if(channel > (DEFAULT_NUMBER_USED_CHANNELS - 1))
     {
+        std::string errormessage = "[ERROR]: channel must be between 0 and " + std::to_string(DEFAULT_NUMBER_USED_CHANNELS - 1) + "!";
         throw errormessage;
     }
     // make them static to do not have to create a new object every time
