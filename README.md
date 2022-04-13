@@ -45,7 +45,7 @@ Moreover, a DSP container with a C++ toolchain is used without the app being com
 Read [REDIS.md](REDIS.md) to learn more about the cache data structure.
 
 ### Documentation for configuration.json with default values
-
+```json
 {
   "influx_host" : "powerberry-influx", /* name of the influxdb into which the processed data will be written */
   "influx_port" : "8086", /* port of the influx db */
@@ -57,6 +57,6 @@ Read [REDIS.md](REDIS.md) to learn more about the cache data structure.
   "dsp_sampling_rate" : "100", /* number of ad samples per second. depending on this setting, more or less measurement points are written to redis */
   "app_voltage_reference" : "228.0" /* Assumed grid voltage */
 }
-
+```
 
 
