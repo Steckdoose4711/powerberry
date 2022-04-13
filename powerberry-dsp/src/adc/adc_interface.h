@@ -1,3 +1,5 @@
+#ifndef ADC_INTERFACE_H
+#define ADC_INTERFACE_H
 /**
  * @file adc_interface.h
  * @author Florian Atzenhofer
@@ -21,12 +23,6 @@ class adc_interface
 {
 
     public:
-        /**
-         * Initialize the ADC .
-         * @param chip_select sets the GPIO Pin, which is used for the Chip select of the ADC.
-         * @return errorcode (0) at success (-1) at failure
-         */
-        virtual int init(size_t const chip_select) = 0;
 
         /**
          * Read voltages from a specific ADC Channel .
@@ -35,4 +31,19 @@ class adc_interface
          */
         virtual float read_voltage(size_t const channel) = 0;
 
+        /**
+         * Sets the reference voltage for the ADC. This is needed to convert digits to voltage.
+         * @param v_reference reference voltage of the ADC in [V]
+         * @return NONE
+         */
+        virtual void set_reference_voltage(float const v_reference) = 0;
+
+        /**
+         * Returns the number of supported channels by this ADC
+         * @return number of supported channels
+         */
+        virtual size_t get_number_channels() = 0;
+
 };
+
+#endif // ADC_INTERFACE_H

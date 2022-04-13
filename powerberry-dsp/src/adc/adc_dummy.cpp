@@ -16,23 +16,23 @@
     static double current_time_radiant = 0;
     static double max_amplitude = 0.5;
     static size_t sine_wave_frequency = 50;
+    static double offset_v = 2.5; // offset voltage for the sine wave
 
-int adc_dummy::init(size_t const chip_select)
+adc_dummy::adc_dummy()
 {
     // calculating an ideal sine wave with a resolution of 
-
 
     // calculate one ideal sinewave 
     for(size_t i = 0; i < nr_samples; i++)
     {
         double datapoint = max_amplitude * sin(current_time_radiant);
+        datapoint += offset_v;
         m_sine_wave.emplace_back(datapoint);
         current_time_radiant += ((2 * M_PI) / nr_samples);
     }
 
    // get current cpu tick timestamp to simulate the "oscillating" sine wave when reading from it
    m_start = std::chrono::steady_clock::now();
-    return 0;
 }
 
 
@@ -56,6 +56,17 @@ float adc_dummy::read_voltage(size_t const channel)
     //std::cout << "noisy sample point: " << sample_point << std::endl;
 
     return sample_point;
+}
+
+
+void adc_dummy::set_reference_voltage(float const v_reference)
+{
+    // nothing to do here
+}
+
+size_t adc_dummy::get_number_channels()
+{
+    return 1;
 }
 
 size_t adc_dummy::get_time_in_current_periode()
@@ -88,3 +99,4 @@ void adc_dummy::add_noise_to_sample(double & sample)
     sample += scaled_noise;
 
 }
+

@@ -1,3 +1,5 @@
+#ifndef ADC_DUMMY_H
+#define ADC_DUMMY_H
 /**
  * @file adc_dummy.h
  * @author Florian Atzenhofer
@@ -10,19 +12,18 @@
 #include <vector>
 #include <chrono>
 
-void testfunc();
 
 
 class adc_dummy : public adc_interface
 {
 
     public:
+
         /**
          * Initialize the ADC .
-         * @param chip_select sets the GPIO Pin, which is used for the Chip select of the ADC.
          * @return errorcode (0) at success (-1) at failure
          */
-        int init(size_t const chip_select);
+        adc_dummy();
 
         /**
          * Read voltages from a specific ADC Channel .
@@ -30,6 +31,19 @@ class adc_dummy : public adc_interface
          * @return the voltage, which was measured at this channel
          */
         float read_voltage(size_t const channel);
+
+        /**
+         * Sets the reference voltage for the ADC. This is needed to convert digits to voltage.
+         * @param v_reference reference voltage of the ADC in [V]
+         * @return NONE
+         */
+        void set_reference_voltage(float const v_reference);        
+
+        /**
+         * Returns the number of supported channels by this ADC
+         * @return number of supported channels
+         */
+        size_t get_number_channels();
 
     private:
 
@@ -52,3 +66,5 @@ class adc_dummy : public adc_interface
         std::chrono::_V2::steady_clock::time_point m_start;
 
 };
+
+#endif // ADC_DUMMY_H

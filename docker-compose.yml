@@ -19,8 +19,28 @@ services:
     volumes:
       - ./powerberry-dsp:/app
       - ./config:/config
+    environment:
+      EMULATE_HARDWARE: emu_hw_true    # use this environment var to specify, if the container runs with emulated or real hardware. [emu_hw_true = emulate hardware, emu_hw_false = real hardware]
 
   powerberry-redis:
     extends:
       file: docker-compose.prod.yml
       service: powerberry-redis
+
+  powerberry-influx:
+    container_name: powerberry-influxdb
+    image: influxdb:1.8.10
+    restart: always
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./influxdb:/var/lib/influxdb
+
+  powerberry-grafana:
+    container_name: powerberry-grafana
+    image: grafana/grafana:8.4.6
+    restart: always    
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana:/var/lib/grafana
