@@ -92,12 +92,11 @@ void datastorage_redis::set_nr_devices(size_t const number_devices)
         return;
     }   
 
-    // build string for adding multiple devices
-    std::string dev = "";
+    // build set with device ids
+    std::unordered_set<std::string> dev = {};
     for(size_t i = 0; i < number_devices; i++)
     {
-        if(i != 0)  dev += " ";
-        dev += std::to_string(i);
+        dev.insert(std::to_string(i));
     }
 
     m_redis->sadd("devices", dev);
@@ -111,11 +110,11 @@ void datastorage_redis::set_nr_channels(size_t const device, size_t const number
         return;
     }   
 
-    std::string channels = "";
+    // build set with channel ids
+    std::unordered_set<std::string> channels = {};
     for(size_t i = 0; i < number_channels; i++)
     {
-        if(i != 0)  channels += " ";
-        channels += std::to_string(i);
+        channels.insert(std::to_string(i));
     }
     std::cout << "[Info]: set deice and channels. Decive: " << device << "; channels: " << channels << std::endl;
     m_redis->sadd("device:" + std::to_string(device) + ":channels", channels);
