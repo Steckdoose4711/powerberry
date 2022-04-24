@@ -1,0 +1,34 @@
+version: "2.4"
+services:
+  # the app post-processes the sensor readings
+  powerberry-app:
+    container_name: powerberry-app
+    restart: always
+    volumes:
+      - ./config:/config:ro
+    environment:
+      CONFIG_PATH: /config/config.json
+      REDIS_HOST: powerberry-redis
+      REDIS_PORT: 6379
+
+  # the dsp reads the hardware sensor
+  powerberry-dsp:
+    container_name: powerberry-dsp
+    restart: always
+    privileged: true
+    init: true
+    volumes:
+      - ./config:/config:ro
+    environment:
+      CONFIG_PATH: /config/config.json
+      REDIS_HOST: powerberry-redis
+      REDIS_PORT: 6379
+      EMULATE_HARDWARE: emu_hw_false
+
+  # redis is used as an in-memory store between the two
+  powerberry-redis:
+    container_name: powerberry-redis
+    image: redis:6.2-alpine
+    restart: always
+    command: |
+      --save "" --appendonly no
