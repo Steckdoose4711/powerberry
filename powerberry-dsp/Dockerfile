@@ -38,7 +38,7 @@ RUN cd /tmp && \
 COPY src src/
 COPY Makefile .
 
-RUN make
+RUN make clean && make
 
 # wait forever, but respond to stop signals in dev mode
 CMD [ "/bin/sh", "-c", "trap : TERM INT; sleep infinity & wait" ]
