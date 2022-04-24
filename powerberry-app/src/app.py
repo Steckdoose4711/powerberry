@@ -78,7 +78,7 @@ class App:
         # wait at least until we have as many samples as the sample rate suggests
         num_samples = self.cache.get_number_of_samples(dev, ch)
         if num_samples < sample_rate:
-            log.debug(f"too few samples on {dev}:{ch} yet ({num_samples}), skip")
+            log.debug(f"too few samples on {dev}:{ch} yet ({num_samples}/{sample_rate}), skip")
             return
 
         # retrieve full blocks only
