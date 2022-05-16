@@ -1,34 +1,21 @@
+x-description: "production environment, with images from container registry"
 version: "2.4"
 services:
-
-  # the app post-processes the sensor readings
   powerberry-app:
-    container_name: powerberry-app
+    extends:
+      file: docker-compose.base.yml
+      service: powerberry-app
     image: ghcr.io/steckdoose4711/powerberry-app:latest
-    restart: always
-    volumes:
-      - ./config:/config:ro
-    environment:
-      CONFIG_PATH: /config/config.json
-      REDIS_HOST: powerberry-redis
 
-  # the dsp reads the hardware sensor
   powerberry-dsp:
-    container_name: powerberry-dsp
+    extends:
+      file: docker-compose.base.yml
+      service: powerberry-dsp
     image: ghcr.io/steckdoose4711/powerberry-dsp:latest
-    restart: always
-    init: true
     volumes:
-      - ./config:/config:ro
-    environment:
-      CONFIG_PATH: /config/config.json
-      REDIS_HOST: powerberry-redis
-      REDIS_PORT: 6379
+      - /sys:/app/sys
 
-  # redis is used as an in-memory store between the two
   powerberry-redis:
-    container_name: powerberry-redis
-    image: redis:6.2-alpine
-    restart: always
-    command: |
-      --save "" --appendonly no
+    extends:
+      file: docker-compose.base.yml
+      service: powerberry-redis

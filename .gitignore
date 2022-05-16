@@ -5,5 +5,4 @@
 !**/.vscode/tasks.json
 
 # grafana and influx mounts
-/grafana
-/influxdb
+data/

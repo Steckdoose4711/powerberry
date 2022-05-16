@@ -1,33 +1,31 @@
+x-description: "local development environment, with built images from sources"
 version: "2.4"
 services:
   powerberry-app:
     extends:
-      file: docker-compose.prod.yml
+      file: docker-compose.base.yml
       service: powerberry-app
+    build: ./powerberry-app
     volumes:
       - ./powerberry-app:/app
-      - ./config:/config
 
-  # for dev, we use the container with sdk tools and bind mounts
   powerberry-dsp:
     extends:
-      file: docker-compose.prod.yml
+      file: docker-compose.base.yml
       service: powerberry-dsp
     build:
       context: ./powerberry-dsp
       target: dev
       args:
-        # container build succeeds even if make fails
         IGNORE_ERRORS: 1
     volumes:
       - ./powerberry-dsp:/app
-      - ./config:/config
     environment:
-      EMULATE_HARDWARE: emu_hw_true    # use this environment var to specify, if the container runs with emulated or real hardware. [emu_hw_true = emulate hardware, emu_hw_false = real hardware]
+      EMULATE_HARDWARE: emu_hw_true
 
   powerberry-redis:
     extends:
-      file: docker-compose.prod.yml
+      file: docker-compose.base.yml
       service: powerberry-redis
 
   powerberry-influx:
@@ -37,13 +35,13 @@ services:
     ports:
       - "8086:8086"
     volumes:
-      - ./influxdb:/var/lib/influxdb
+      - ./data/influxdb:/var/lib/influxdb
 
   powerberry-grafana:
     container_name: powerberry-grafana
     image: grafana/grafana:8.4.6
-    restart: always    
+    restart: always
     ports:
       - "3000:3000"
     volumes:
-      - ./grafana:/var/lib/grafana
+      - ./data/grafana:/var/lib/grafana

@@ -9,9 +9,9 @@ Measures the current consumption of your house with a Raspberry Pi and visualize
 
 Get going with pre-built images from the container registry
 
-    docker-compose -f docker-compose.ghcr.yml up -d --build
+    docker-compose -f docker-compose.ghcr.yml up -d
 
-Build a production container from scratch
+Or build a production container from scratch
 
     docker-compose -f docker-compose.prod.yml up -d --build
 
@@ -44,19 +44,21 @@ Moreover, a DSP container with a C++ toolchain is used without the app being com
 
 Read [REDIS.md](REDIS.md) to learn more about the cache data structure.
 
-### :pencil2: Documentation for configuration.json with default values
+## ✏️ Configuration
+
+Configuration is stored in `config.json`.
+Mount the folder that holds this file at the path specified by the `CONFIG_PATH` environment variable.
+
 ```jsonc
 {
-  "influx_host" : "powerberry-influx", /* name of the influxdb into which the processed data will be written */
-  "influx_port" : "8086", /* port of the influx db */
-  "dsp_number_adc_devices" : "1", /* number of used adc chips.  [Default = 1] */
-  "dsp_number_channels_per_device" : "3", /* number of used channels per adc chip */
-  "dsp_adc_reference_voltage_V" : "4.8", /* reference voltage that is used to convert adc samples into a voltage */
-  "dsp_filter_type" : "median", /* type of the filter, which is used for adc sampling (median and mean are supported) */
-  "dsp_measurement_rate" : "3", /* number of measuring points per adc sample. */
-  "dsp_sampling_rate" : "100", /* number of ad samples per second. depending on this setting, more or less measurement points are written to redis */
-  "app_voltage_reference" : "228.0" /* Assumed grid voltage */
+  "influx_host" : "powerberry-influx",      /* hostname of influxdb */
+  "influx_port" : "8086",                   /* port of influxdb */
+  "dsp_number_adc_devices" : "1",           /* number of used ADC chips [default: 1] */
+  "dsp_number_channels_per_device" : "3",   /* number of used channels per ADC chip */
+  "dsp_adc_reference_voltage_V" : "4.8",    /* reference voltage to convert ADC values to a voltage */
+  "dsp_filter_type" : "median",             /* ADC sampling filter type ['median' or 'mean'] */
+  "dsp_measurement_rate" : "3",             /* number of measurement points per ADC sample */
+  "dsp_sampling_rate" : "100",              /* number of ADC samples per second, dictates data throughput to Redis */
+  "app_voltage_reference" : "228.0"         /* assumed grid voltage */
 }
 ```
-
-
