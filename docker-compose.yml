@@ -16,6 +16,9 @@ services:
     build:
       context: ./powerberry-dsp
       target: dev
+      args:
+        # container build succeeds even if make fails
+        IGNORE_ERRORS: 1
     volumes:
       - ./powerberry-dsp:/app
       - ./config:/config

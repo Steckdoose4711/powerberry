@@ -38,7 +38,11 @@ RUN cd /tmp && \
 COPY src src/
 COPY Makefile .
 
-RUN make clean && make
+ARG IGNORE_ERRORS=0
+RUN if [ "$IGNORE_ERRORS" = "1" ]; \
+    then make clean && make -i; \
+    else make clean && make; \
+    fi
 
 # wait forever, but respond to stop signals in dev mode
 CMD [ "/bin/sh", "-c", "trap : TERM INT; sleep infinity & wait" ]
