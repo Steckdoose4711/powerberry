@@ -1,6 +1,6 @@
 {
-  "influx_host" : "powerberry-influx",
-  "influx_port" : "8086",
+  "app_influx_host" : "powerberry-influx",
+  "app_influx_port" : "8086",
   "dsp_number_adc_devices" : "1",
   "dsp_number_channels_per_device" : "3",
   "dsp_adc_reference_voltage_V" : "4.8",

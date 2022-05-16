@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        throw std::runtime_error("Environment variable EMULATE_HARDWARE must be set to true or false.");
+        throw std::runtime_error("Environment variable EMULATE_HARDWARE must be set to 'emu_hw_true' or 'emu_hw_false'.");
     }
 
     // filter
