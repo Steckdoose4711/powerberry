@@ -1,39 +1,21 @@
+x-description: "production environment, with built images from sources"
 version: "2.4"
 services:
-
-  # the app post-processes the sensor readings
   powerberry-app:
-    container_name: powerberry-app
-    build:
-      context: ./powerberry-app
-    restart: always
-    volumes:
-      - ./config:/config:ro
-    environment:
-      CONFIG_PATH: /config/config.json # path of the configurationfile for the app
-      REDIS_HOST: powerberry-redis # hostname for the redis container
+    extends:
+      file: docker-compose.base.yml
+      service: powerberry-app
+    build: ./powerberry-app
 
-  # the dsp reads the hardware sensor
   powerberry-dsp:
-    container_name: powerberry-dsp
-    build:
-      context: ./powerberry-dsp
-      target: prod
-    restart: always
-    init: true
+    extends:
+      file: docker-compose.base.yml
+      service: powerberry-dsp
+    build: ./powerberry-dsp
     volumes:
-      - ./config:/config:ro
       - /sys:/app/sys
-    privileged: true
-    environment:
-      CONFIG_PATH: /config/config.json # path of the configurationfile for the app
-      REDIS_HOST: powerberry-redis # hostname for the redis container
-      REDIS_PORT: 6379 # port for the redis container
 
-  # redis is used as an in-memory store between the two
   powerberry-redis:
-    container_name: powerberry-redis
-    image: redis:6.2-alpine
-    restart: always
-    command: |
-      --save "" --appendonly no
+    extends:
+      file: docker-compose.base.yml
+      service: powerberry-redis
