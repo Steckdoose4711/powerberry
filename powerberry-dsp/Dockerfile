@@ -24,7 +24,7 @@ RUN cd /tmp && \
     make install && \
     ldconfig
 
-#install bcm2835 library (needed for spi)
+# BCM2835 library for SPI
 RUN cd /tmp && \
     wget http://www.airspayce.com/mikem/bcm2835/bcm2835-1.58.tar.gz && \
     tar xvfz bcm2835-1.58.tar.gz && \
