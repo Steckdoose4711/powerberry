@@ -1,4 +1,4 @@
-# 🔌🍇 PowerBerry 
+# 🔌🍇 PowerBerry
 
 :construction_worker: This Project is under construction at the moment. Releases will be done soon
 

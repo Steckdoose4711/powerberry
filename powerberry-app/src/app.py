@@ -1,5 +1,6 @@
 from enum import Enum
 from time import sleep
+from typing import Dict, Optional, Set, Tuple
 
 import numpy as np
 import numpy.typing as npt
@@ -35,14 +36,14 @@ class App:
                 if not self.process():
                     self.state = AppState.Connecting
 
-    def connect(self):
+    def connect(self) -> bool:
         connected = self.cache.connect()
         if not connected:
             log.warning(f"cache connection retry in {CACHE_RETRY_SEC} seconds ...")
             sleep(CACHE_RETRY_SEC)
         return connected
 
-    def process(self):
+    def process(self) -> bool:
         try:
             self._read_devices()
             return True
@@ -59,7 +60,7 @@ class App:
 
         sleep(CACHE_CYCLE_SEC)
 
-    def _query_devices(self):
+    def _query_devices(self) -> Dict[str, Set[str]]:
         result = {}
         devices = self.cache.get_devices()
         for dev in devices:
@@ -69,7 +70,7 @@ class App:
         log.info(f"queried devices and channels: {result}")
         return result
 
-    def _read_channel(self, dev, ch) -> npt.NDArray[np.float32]:
+    def _read_channel(self, dev, ch) -> Optional[Tuple[npt.NDArray[np.float32], npt.NDArray[np.float32]]]:
         sample_rate = self.cache.get_sample_rate(dev, ch)
         if not sample_rate:
             log.error(f"no sample rate set for {dev}:{ch}, skip")
@@ -84,10 +85,11 @@ class App:
         # retrieve full blocks only
         num_blocks = num_samples // sample_rate
         ts, volt = self.cache.get_samples(dev, ch, num_blocks * sample_rate)
-        ts, volt = ts.reshape(-1, sample_rate), volt.reshape(-1, sample_rate)
 
         log.info(
             f"read {num_blocks} blocks (at {sample_rate} Hz each) "
             f"from {dev}:{ch} "
-            f"(mean values: {volt.mean(axis=1)} at times {ts.min()} .. {ts.max()})"
+            f"(mean value: {volt.mean()} at times {ts.min()} .. {ts.max()})"
         )
+
+        return ts, volt
