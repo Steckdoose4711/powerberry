@@ -27,6 +27,8 @@ using namespace sw::redis;
 int main(int argc, char *argv[])
 {
 
+    std::cout << "[INFO]: Hey, Powerberry DSP is up and running." << std::endl;
+
     std::string config_file_path = "/config/config.json";
     auto env_config_file_path = std::getenv("CONFIG_PATH");
     auto env_redis_host = std::getenv("REDIS_HOST");
@@ -123,4 +125,8 @@ int main(int argc, char *argv[])
                                                                                     json_config.getSamplingRate_dsp());
 
     controller_instance->start_DSP();
+
+
+    std::cout << "[INFO]: Bye, Powerberry DSP is shutting down..." << std::endl;
+
 }
