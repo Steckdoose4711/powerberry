@@ -19,10 +19,9 @@ class Config:
         # query variables
         self.from_env("REDIS_HOST", default="localhost")
         self.from_env("REDIS_PORT", default=6379, cast=int)
-        self.from_cfg("influx_host", default="localhost")
-        self.from_cfg("influx_port", default=8086, cast=int)
-        self.from_cfg("voltage_reference", default=228, cast=float)
-        self.from_cfg("sampling_rate", cast=int)
+        self.from_cfg("app_influx_host", default="localhost")
+        self.from_cfg("app_influx_port", default=8086, cast=int)
+        self.from_cfg("app_voltage_reference", default=228, cast=float)
 
     def from_env(self, key, default=None, cast=None):
         value = self._get_key(key, os.environ, "env variable", default, cast)

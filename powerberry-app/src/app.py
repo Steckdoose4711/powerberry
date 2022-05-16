@@ -78,16 +78,16 @@ class App:
         # wait at least until we have as many samples as the sample rate suggests
         num_samples = self.cache.get_number_of_samples(dev, ch)
         if num_samples < sample_rate:
-            log.debug(f"too few samples on {dev}:{ch} yet ({num_samples}), skip")
+            log.debug(f"too few samples on {dev}:{ch} yet ({num_samples}/{sample_rate}), skip")
             return
 
         # retrieve full blocks only
         num_blocks = num_samples // sample_rate
-        arr = self.cache.get_samples(dev, ch, num_blocks * sample_rate)
-        arr = arr.reshape(-1, sample_rate)
+        ts, volt = self.cache.get_samples(dev, ch, num_blocks * sample_rate)
+        ts, volt = ts.reshape(-1, sample_rate), volt.reshape(-1, sample_rate)
 
         log.info(
             f"read {num_blocks} blocks (at {sample_rate} Hz each) "
             f"from {dev}:{ch} "
-            f"(mean values: {arr.mean(axis=1)})"
+            f"(mean values: {volt.mean(axis=1)} at times {ts.min()} .. {ts.max()})"
         )
