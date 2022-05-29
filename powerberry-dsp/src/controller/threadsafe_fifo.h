@@ -11,8 +11,11 @@
 #include <memory>
 #include <tuple>
 #include <queue>
+#include <mutex>
 
+#include "filters/filter_interface.h"
 
+typedef std::tuple <size_t, std::shared_ptr<std::vector<measurement_t>>> device_measurement_t;
 
 class threadsafe_fifo
 {
@@ -29,9 +32,32 @@ class threadsafe_fifo
          */
         threadsafe_fifo();
 
+        /**
+         * Push a measurement for a device to the fifo
+         * @param device_nr number of the measuring device
+         * @param samples samples for the channels of the device
+         * @return 0, if the measurement was pushed to the fifo, -1, if the fifo is full or blocked
+         */
+        int push(size_t const device_nr, std::shared_ptr<std::vector<measurement_t>> const& samples);
+
+        /**
+         * Returns the fill level of the fifo
+         * @return fill level
+         */
+        size_t getFillLevel();
+
+        /**
+         * Get all Measurements from the fifo
+         * @return vector with all the measurements
+         */
+        std::queue<device_measurement_t> get_all_measurements();
 
 
     private:
+
+    std::queue<device_measurement_t> m_queue;
+    std::mutex m_mutex;
+    size_t m_max_size = 100000;
 
 };
 
