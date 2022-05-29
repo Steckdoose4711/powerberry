@@ -58,7 +58,7 @@ void controller::start_DSP()
             for(size_t channel = 0; channel < number_channels; channel++)
             {
                 std::vector<measurement_t> raw_channel_values;
-                for(size_t j = 0; j < m_measurement_rate; j++)
+                for(size_t sample_cnt = 0; sample_cnt < m_measurement_rate; sample_cnt++)
                 {
                     uint64_t timestamp = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();    // timestamp in mictoseconds since epoch
                     float voltage = adc->read_voltage(channel); //voltage of the channel in [V]
@@ -74,7 +74,7 @@ void controller::start_DSP()
             time_measure = (now - now1);
 
             // Do filtering for all channels of this ADC
-            // filtered_adc_values fill have same size as number of channels of this ADC
+            // filtered_adc_values will have same size as number of channels of this ADC
             for(auto it = raw_values.begin(); it != raw_values.end(); it++)
             {
                 p_filtered_adc_values->emplace_back(m_p_filter->filter_values(*it)); // filter values for each channel
@@ -84,6 +84,7 @@ void controller::start_DSP()
             time_filter = (now1 - now);
 
             // now we have filtered all channels of this ADC and we can store them into our data storage
+            // each entry is a sample for a channel (e.g. p_filtered_adc_values[0] is the sample for channel 0, p_filtered_adc_values[1] is the sample for channel 1)
             m_p_datastorage->store_measurement(used_device, p_filtered_adc_values);
             used_device++;
 
