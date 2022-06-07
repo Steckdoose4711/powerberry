@@ -14,6 +14,14 @@
 
 #define ENABLE_DEBUG_INFOS 0
 
+
+/**
+ * This function pushes the filtered values to Redis in a seperate thread.
+ * @return NONE
+ */
+static void pushDataToDatastorage();
+
+
 controller::controller( std::vector<std::shared_ptr<adc_interface>> adc_list,
                         std::shared_ptr<filter_interface> p_filter,
                         std::shared_ptr<datastorage_interface> p_datastorage,
@@ -25,7 +33,10 @@ controller::controller( std::vector<std::shared_ptr<adc_interface>> adc_list,
     m_p_datastorage = p_datastorage;
     m_measurement_rate = measurement_rate;
     m_sampling_rate = sampling_rate;
+    // [warning] This is a fire & forget thread
+    std::thread t1(pushDataToDatastorage);
 
+    
 }
 
 
@@ -119,7 +130,11 @@ void controller::start_DSP()
 }
 
 
-void controller::pushDataToDatastorage()
+static void pushDataToDatastorage()
 {
-
+    while(true)
+    {
+        std::cout << "This is the output from a second thread! " << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+    }
 }
