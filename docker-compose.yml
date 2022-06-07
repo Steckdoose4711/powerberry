@@ -27,6 +27,8 @@ services:
     extends:
       file: docker-compose.base.yml
       service: powerberry-redis
+    ports:
+      - "6379:6379"
 
   powerberry-influx:
     container_name: powerberry-influxdb
