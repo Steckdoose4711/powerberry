@@ -16,6 +16,7 @@ int threadsafe_fifo::push(size_t const device_nr, std::shared_ptr<std::vector<me
             return -1;
         }
         m_queue.push(std::make_tuple(device_nr, samples));
+        return 0;
     }
 }
 

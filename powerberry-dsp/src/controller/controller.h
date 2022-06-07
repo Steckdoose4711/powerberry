@@ -9,10 +9,13 @@
 
 #include <vector>
 #include <memory>
+#include <tuple>
 
+#include "threadsafe_fifo.h"
 #include "adc/adc_interface.h"
 #include "filters/filter_interface.h"
 #include "datastorage/datastorage_interface.h"
+
 class controller
 {
     public:
@@ -40,11 +43,19 @@ class controller
 
     private:
 
+        /**
+         * This function pushes the filtered values to Redis in a seperate thread.
+         * @return NONE
+         */
+    void pushDataToDatastorage();
+
+
     std::vector<std::shared_ptr<adc_interface>> m_adc_list;
     std::shared_ptr<filter_interface> m_p_filter;
     std::shared_ptr<datastorage_interface> m_p_datastorage;
     size_t m_measurement_rate;
     size_t m_sampling_rate;
+    threadsafe_fifo m_cache_fifo;
 };
 
 #endif // CONTROLLER_H
