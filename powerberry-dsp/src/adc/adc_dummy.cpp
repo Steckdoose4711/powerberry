@@ -12,7 +12,7 @@
 #include <iostream>
 #include <stdlib.h>
 
-    static size_t nr_samples = 100;
+    static size_t nr_samples = 1000;
     static double current_time_radiant = 0;
     static double max_amplitude = 0.5;
     static size_t sine_wave_frequency = 50;
