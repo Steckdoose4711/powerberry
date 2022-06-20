@@ -11,16 +11,18 @@
 #include<thread>
 #include <chrono>
 #include <iostream>
+#include "threadsafe_fifo.h"
 
 #define ENABLE_DEBUG_INFOS 0
 
+
+ static threadsafe_fifo cache_fifo;
 
 /**
  * This function pushes the filtered values to Redis in a seperate thread.
  * @return NONE
  */
-static void pushDataToDatastorage();
-
+static void TransferCacheToRedis(std::shared_ptr<datastorage_interface> p_datastorage);
 
 controller::controller( std::vector<std::shared_ptr<adc_interface>> adc_list,
                         std::shared_ptr<filter_interface> p_filter,
@@ -33,15 +35,14 @@ controller::controller( std::vector<std::shared_ptr<adc_interface>> adc_list,
     m_p_datastorage = p_datastorage;
     m_measurement_rate = measurement_rate;
     m_sampling_rate = sampling_rate;
-    // [warning] This is a fire & forget thread
-    std::thread t1(pushDataToDatastorage);
-
-    
 }
 
 
 void controller::start_DSP()
 {
+    // [warning] This is a fire & forget thread
+    std::thread t1(TransferCacheToRedis, m_p_datastorage);
+
     while(true)
     {
         // we need to measure the time, which is needed for our code to calculate waiting time until the next measurement
@@ -96,7 +97,7 @@ void controller::start_DSP()
 
             // now we have filtered all channels of this ADC and we can store them into our data storage
             // each entry is a sample for a channel (e.g. p_filtered_adc_values[0] is the sample for channel 0, p_filtered_adc_values[1] is the sample for channel 1)
-            m_p_datastorage->store_measurement(used_device, p_filtered_adc_values);
+            cache_fifo.push(used_device, p_filtered_adc_values);
             used_device++;
 
             now = std::chrono::high_resolution_clock::now();
@@ -130,11 +131,22 @@ void controller::start_DSP()
 }
 
 
-static void pushDataToDatastorage()
+static void TransferCacheToRedis(std::shared_ptr<datastorage_interface> p_datastorage)
 {
     while(true)
     {
-        std::cout << "This is the output from a second thread! " << std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+        // get the complete content from the queue and copy each measurement into redis seperately
+        std::queue<device_measurement_t>  measurements = cache_fifo.get_all_measurements();
+        while(measurements.size() > 0)
+        {
+            // we have to get the element and delete it seperately
+            device_measurement_t measurement = measurements.front();
+            measurements.pop();
+
+            // store to redis
+            p_datastorage->store_measurement(std::get<0>(measurement), std::get<1>(measurement));
+        }
+        // we allow one second delay between measurement and viasualizing the data
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
 }
