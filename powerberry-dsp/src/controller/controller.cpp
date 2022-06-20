@@ -130,13 +130,24 @@ void controller::start_DSP()
     }
 }
 
-
+#if ENABLE_DEBUG_INFOS == 1
+    static size_t test = 0;
+#endif
 static void TransferCacheToRedis(std::shared_ptr<datastorage_interface> p_datastorage)
 {
     while(true)
     {
         // get the complete content from the queue and copy each measurement into redis seperately
         std::queue<device_measurement_t>  measurements = cache_fifo.get_all_measurements();
+
+        #if ENABLE_DEBUG_INFOS == 1
+            if(measurements.size() > test)
+            {
+                std::cout << "size (" << measurements.size() << ") is " << measurements.size() - test << " greater than last time(" << test << ")" << std::endl;
+            }
+            test = measurements.size();
+        #endif
+
         while(measurements.size() > 0)
         {
             // we have to get the element and delete it seperately
