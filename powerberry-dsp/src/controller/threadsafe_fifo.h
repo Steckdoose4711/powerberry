@@ -30,7 +30,7 @@ class threadsafe_fifo
          * @param sampling_rate sampling frequency of the DSP
          * @return the filtered voltage
          */
-        threadsafe_fifo();
+        threadsafe_fifo(){};
 
         /**
          * Push a measurement for a device to the fifo
