@@ -13,7 +13,7 @@
 #include <chrono>
 #include <thread>
 
-#define ENABLE_DEBUG_INFOS 1
+#define ENABLE_DEBUG_INFOS 0
 
 
 

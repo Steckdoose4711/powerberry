@@ -9,10 +9,14 @@
 
 #include <vector>
 #include <memory>
+#include <tuple>
+#include <thread>
 
+#include "threadsafe_fifo.h"
 #include "adc/adc_interface.h"
 #include "filters/filter_interface.h"
 #include "datastorage/datastorage_interface.h"
+
 class controller
 {
     public:
@@ -36,6 +40,8 @@ class controller
          * @return none
          */
         void start_DSP();
+
+
 
 
     private:
