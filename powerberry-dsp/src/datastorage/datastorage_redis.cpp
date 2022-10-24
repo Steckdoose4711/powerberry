@@ -13,7 +13,7 @@
 #include <chrono>
 #include <thread>
 
-#define ENABLE_DEBUG_INFOS 0
+#define ENABLE_DEBUG_INFOS 1
 
 
 
@@ -60,26 +60,31 @@ datastorage_redis::datastorage_redis(std::string const & connectionstring, size_
     }
 }
 
- void datastorage_redis::store_measurement(size_t const device_id, std::shared_ptr<std::vector<measurement_t>> const & measurements)
+ void datastorage_redis::store_measurement(size_t const device_id, size_t const channel_id, std::vector<measurement_t> & measurements)
 {
+
+
+    std::vector<std::string> redisVec;
+    redisVec.reserve(measurements.size());
     // build string for redis
-    size_t channel_number = 0;
-    for(auto it = measurements->begin(); it != measurements->end(); it++)
+
+    std::string redis_str = "device:" + std::to_string(device_id) + ":channel:" + std::to_string(channel_id) + ":voltage";
+
+    for(auto it = measurements.begin(); it != measurements.end(); it++)
     {
         uint64_t timestamp = std::get<0>(*it);
         float value = std::get<1>(*it);
         std::string measurement_str= std::to_string(timestamp) + ";" + std::to_string(value);
 
-        std::string redis_str = "device:" + std::to_string(device_id) + ":channel:" + std::to_string(channel_number) + ":voltage";
+        redisVec.emplace_back(measurement_str);
 
         #if ENABLE_DEBUG_INFOS == 1
             std::cout << redis_str << " " << measurement_str << std::endl;
         #endif
 
         // store data to redis and guarantee that redis contains maximum 10000 entries per channel
-        m_redis->lpush(redis_str, measurement_str);
+        //m_redis->lpush(redis_str, redisVec);
         m_redis->ltrim(redis_str, 0, 10000);
-        channel_number++;
     }
 }
 

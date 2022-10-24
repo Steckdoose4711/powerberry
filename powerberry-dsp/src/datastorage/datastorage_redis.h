@@ -45,7 +45,7 @@ class datastorage_redis : public datastorage_interface
          * 
          * @return NONE
          */
-        void store_measurement(size_t const device_id, std::shared_ptr<std::vector<measurement_t>> const & measurements);
+         void store_measurement(size_t const device_id, size_t const channel_id, std::vector<measurement_t> & measurements);
 
     private:
 

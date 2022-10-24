@@ -25,7 +25,7 @@ class datastorage_interface
          * 
          * @return NONE
          */
-        virtual void store_measurement(size_t const device_id, std::shared_ptr<std::vector<measurement_t>> const & measurements) = 0;
+        virtual void store_measurement(size_t const device_id, size_t const channel_id, std::vector<measurement_t> & measurements);
 
     private:
 

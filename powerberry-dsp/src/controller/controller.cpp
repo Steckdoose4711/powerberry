@@ -58,7 +58,7 @@ void controller::start_DSP()
         for (auto const& adc : m_adc_list)
         {
             std::vector<std::vector<measurement_t>> raw_values;
-            std::shared_ptr<std::vector<measurement_t>> p_filtered_adc_values = std::make_shared<std::vector<measurement_t>>();
+            std::vector<measurement_t> p_filtered_adc_values;
 
             // we need to know how much channel this adc has
             size_t number_channels = adc->get_number_channels();
@@ -89,8 +89,11 @@ void controller::start_DSP()
             // filtered_adc_values will have same size as number of channels of this ADC
             for(auto it = raw_values.begin(); it != raw_values.end(); it++)
             {
-                p_filtered_adc_values->emplace_back(m_p_filter->filter_values(*it)); // filter values for each channel
+                p_filtered_adc_values.emplace_back(m_p_filter->filter_values(*it)); // filter values for each channel
             }
+
+
+
 
             now1 = std::chrono::high_resolution_clock::now();
             time_filter = (now1 - now);
@@ -138,7 +141,7 @@ static void TransferCacheToRedis(std::shared_ptr<datastorage_interface> p_datast
     while(true)
     {
         // get the complete content from the queue and copy each measurement into redis seperately
-        std::queue<device_measurement_t>  measurements = cache_fifo.get_all_measurements();
+        auto measurements = cache_fifo.pop_all_measurements();
 
         #if ENABLE_DEBUG_INFOS == 1
             if(measurements.size() > test)
@@ -148,16 +151,21 @@ static void TransferCacheToRedis(std::shared_ptr<datastorage_interface> p_datast
             test = measurements.size();
         #endif
 
-        while(measurements.size() > 0)
-        {
-            // we have to get the element and delete it seperately
-            device_measurement_t measurement = measurements.front();
-            measurements.pop();
+
 
             // store to redis
-            p_datastorage->store_measurement(std::get<0>(measurement), std::get<1>(measurement));
-        }
+            std::cout << "Storing " + measurements->size() << " elements" << std::endl;
+
+            for(size_t adc = 0; adc < measurements->size(); adc++)
+            {
+                for(size_t channel = 0; channel < measurements.get()[adc].size(); channel++)
+                {
+
+                    p_datastorage->store_measurement(adc, channel, (*measurements.get())[adc][channel]);
+                }
+            }
+
         // we allow one second delay between measurement and viasualizing the data
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(5000));
     }
 }
