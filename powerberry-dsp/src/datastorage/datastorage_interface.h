@@ -15,7 +15,7 @@
 
 class datastorage_interface
 {
-
+#if (1 == 0)
     public:
 
         /**
@@ -53,7 +53,7 @@ class datastorage_interface
          */
         virtual void set_sample_frequency(size_t const device_id, size_t const channel, size_t const sample_frequency) = 0;
 
-
+#endif
 };
 
 #endif // DATASTORAGE_H

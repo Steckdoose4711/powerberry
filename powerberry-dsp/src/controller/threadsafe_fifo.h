@@ -15,7 +15,9 @@
 
 #include "filters/filter_interface.h"
 
-typedef std::vector<std::vector<std::vector<measurement_t>>> ADC_Ch_Meas_Vec_t;
+typedef std::shared_ptr<std::vector<measurement_t>> Sample_t;
+typedef std::shared_ptr<std::vector<Sample_t>> Channel_Sample_t;
+typedef std::shared_ptr<std::vector<Channel_Sample_t>> ADC_Channel_Sample_t;
 
 
 class threadsafe_fifo
@@ -33,7 +35,7 @@ class threadsafe_fifo
          */
         threadsafe_fifo()
         {
-            m_channelVectors = std::make_shared<ADC_Ch_Meas_Vec_t>();
+            m_p_channelVectors = std::make_shared<std::vector<Channel_Sample_t>>();
 
         };
 
@@ -55,12 +57,12 @@ class threadsafe_fifo
          * Get all Measurements from the fifo
          * @return vector with all the measurements
          */
-        std::shared_ptr<ADC_Ch_Meas_Vec_t> pop_all_measurements();
+        ADC_Channel_Sample_t pop_all_measurements();
 
 
     private:
 
-    std::shared_ptr<ADC_Ch_Meas_Vec_t> m_channelVectors;
+    ADC_Channel_Sample_t m_p_channelVectors;
     std::mutex m_mutex;
     size_t m_max_size = 100000;
 

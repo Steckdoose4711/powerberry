@@ -112,6 +112,7 @@ int main(int argc, char *argv[])
 
     // redis
     std::string redis_connectionstring = "tcp://" + std::string(env_redis_host) + ":" + std::string(env_redis_port);
+    /*
     std::shared_ptr<datastorage_interface> datastorage_instance = std::make_shared<datastorage_redis>(redis_connectionstring, 
                                                                                                       json_config.get_NrADCdevices(), 
                                                                                                       json_config.get_NrChannelsPerADC(),
@@ -125,7 +126,7 @@ int main(int argc, char *argv[])
                                                                                     json_config.getSamplingRate_dsp());
 
     controller_instance->start_DSP();
-
+*/
 
     std::cout << "[INFO]: Bye, Powerberry DSP is shutting down..." << std::endl;
 

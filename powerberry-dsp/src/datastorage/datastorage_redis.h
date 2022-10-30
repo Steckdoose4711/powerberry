@@ -37,7 +37,6 @@ class datastorage_redis : public datastorage_interface
          */
         datastorage_redis(std::string const & connectionstring, size_t const number_devices, size_t const number_channels, size_t const sample_frequency);
 
-
         /**
          * Store data for all channels of a devcice to the datastorage
          * @param device_id number of device, which channels should be stored
@@ -79,7 +78,7 @@ class datastorage_redis : public datastorage_interface
          * @return NONE
          */
         void set_connection_string(std::string const & connectionstring);    
-
+        
     std::string m_connectionstring;
     std::shared_ptr<Redis> m_redis;
     bool m_is_initialized = false;  // only initialize redis once because multiple times would crash the channels/devices/frequency mapping

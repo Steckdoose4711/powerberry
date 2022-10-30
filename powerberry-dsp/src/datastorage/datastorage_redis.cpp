@@ -63,7 +63,7 @@ datastorage_redis::datastorage_redis(std::string const & connectionstring, size_
  void datastorage_redis::store_measurement(size_t const device_id, size_t const channel_id, std::vector<measurement_t> & measurements)
 {
 
-
+/*
     std::vector<std::string> redisVec;
     redisVec.reserve(measurements.size());
     // build string for redis
@@ -86,6 +86,7 @@ datastorage_redis::datastorage_redis(std::string const & connectionstring, size_
         //m_redis->lpush(redis_str, redisVec);
         m_redis->ltrim(redis_str, 0, 10000);
     }
+    */
 }
 
 
