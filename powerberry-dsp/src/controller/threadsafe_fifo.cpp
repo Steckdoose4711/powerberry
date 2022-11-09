@@ -67,11 +67,11 @@ std::shared_ptr<Channel_Sample_t> threadsafe_fifo::pop_all_measurements()
 {
     {
         std::lock_guard<std::mutex> lock(m_mutex);
-/*
-        auto p_temp = m_p_channelVectors;
-        m_p_channelVectors = std::make_shared<pADCs_Channels_Samples_t>();
+
+        auto p_temp = m_p_channels;
+        m_p_channels = std::make_shared<Channel_Sample_t>();
 
         return p_temp;
-        */
+        
     }
 }
