@@ -154,7 +154,7 @@ static void TransferCacheToRedis(std::shared_ptr<datastorage_interface> p_datast
 
 
             // store to redis
-            std::cout << "Storing " + measurements->size() << " elements" << std::endl;
+            std::cout << "Storing " + (measurements.get())->size() << " channels" << std::endl;
 
                 for(size_t channel = 0; channel < (measurements.get())->size(); channel++)
                 {
