@@ -27,7 +27,7 @@ int threadsafe_fifo::push(size_t device_nr, std::vector<measurement_t> & samples
         bool max_size_reached = false;
 
         // Check, if one of the vector already reached it's max values
-        /*
+        
         for(size_t channel = 0; channel < samples.size(); channel++)
         {
             if((m_p_channels.get())->at(channel)->size() >= m_max_measurements_per_channel)
@@ -35,7 +35,7 @@ int threadsafe_fifo::push(size_t device_nr, std::vector<measurement_t> & samples
                 max_size_reached = true;
             }
         }
-*/
+
         // do not add further values, if maximum size of the buffer is already reached
         if(max_size_reached)
         {

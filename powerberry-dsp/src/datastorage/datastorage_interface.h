@@ -15,7 +15,6 @@
 
 class datastorage_interface
 {
-#if (1 == 0)
     public:
 
         /**
@@ -25,7 +24,7 @@ class datastorage_interface
          * 
          * @return NONE
          */
-        virtual void store_measurement(size_t const device_id, size_t const channel_id, std::vector<measurement_t> & measurements);
+        virtual void store_measurement(size_t const device_id, size_t const channel_id, std::vector<measurement_t> & measurements) = 0;
 
     private:
 
@@ -52,8 +51,6 @@ class datastorage_interface
          * @return NONE
          */
         virtual void set_sample_frequency(size_t const device_id, size_t const channel, size_t const sample_frequency) = 0;
-
-#endif
 };
 
 #endif // DATASTORAGE_H
