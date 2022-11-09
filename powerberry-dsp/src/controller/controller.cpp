@@ -162,7 +162,7 @@ static void TransferCacheToRedis(std::shared_ptr<datastorage_interface> p_datast
                     p_datastorage->store_measurement(0, channel, samples);
                 }
 
-        // we allow one second delay between measurement and viasualizing the data
-        std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+        // run task each 10 milliseconds to push data to redis
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
