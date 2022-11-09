@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 
     // SPI and ADC
     // at the moment, only one ADC is allowed
-    if(json_config.get_NrADCdevices() > 1) throw std::runtime_error("Only one ADC device is allowed at the momend. Extend config file within an array of chipselect pins to allow more than one ADC device.");
+    if(json_config.get_NrADCdevices() > 1) throw std::runtime_error("Only one ADC device is allowed at the moment. Extend config file within an array of chipselect pins to allow more than one ADC device.");
     
     std::vector<std::shared_ptr<adc_interface>> adcs;
     // check, if hardware must be emulated
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 
     // redis
     std::string redis_connectionstring = "tcp://" + std::string(env_redis_host) + ":" + std::string(env_redis_port);
-    /*
+    
     std::shared_ptr<datastorage_interface> datastorage_instance = std::make_shared<datastorage_redis>(redis_connectionstring, 
                                                                                                       json_config.get_NrADCdevices(), 
                                                                                                       json_config.get_NrChannelsPerADC(),
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
                                                                                     json_config.getSamplingRate_dsp());
 
     controller_instance->start_DSP();
-*/
+
 
     std::cout << "[INFO]: Bye, Powerberry DSP is shutting down..." << std::endl;
 

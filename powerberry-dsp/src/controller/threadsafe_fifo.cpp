@@ -12,12 +12,10 @@ int threadsafe_fifo::push(size_t device_nr, std::vector<measurement_t> & samples
     {
         std::lock_guard<std::mutex> lock(m_mutex);
 
-        
-        
         // add a vector with channels for each ADC
         while((m_p_channelVectors.get())->size() <= device_nr)
         {
-            m_p_channelVectors->emplace_back(std::make_shared<Channel_Sample_t>());
+            m_p_channelVectors->emplace_back(std::make_shared<std::vector<pSamples_t>>());
         }
 
         // size of samples is equal to the channel number because samples contains one sample for each channel
@@ -27,7 +25,8 @@ int threadsafe_fifo::push(size_t device_nr, std::vector<measurement_t> & samples
         auto p_adc = (m_p_channelVectors.get())[device_nr];
         while(p_adc.size() <= nr_channels)
         {
-            p_adc.emplace_back(std::make_shared<Sample_t>);
+            pSamples_t pSampleVec = std::make_shared<std::vector<measurement_t>>();
+            //p_adc.emplace_back(std::make_shared<std::vector<measurement_t>>());
         }
 /*
 
@@ -55,13 +54,13 @@ size_t threadsafe_fifo::getFillLevel()
 }
 
 
-ADC_Channel_Sample_t threadsafe_fifo::pop_all_measurements()
+pADCs_Channels_Samples_t threadsafe_fifo::pop_all_measurements()
 {
     {
         std::lock_guard<std::mutex> lock(m_mutex);
 /*
         auto p_temp = m_p_channelVectors;
-        m_p_channelVectors = std::make_shared<ADC_Channel_Sample_t>();
+        m_p_channelVectors = std::make_shared<pADCs_Channels_Samples_t>();
 
         return p_temp;
         */
