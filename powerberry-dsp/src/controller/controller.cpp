@@ -156,14 +156,11 @@ static void TransferCacheToRedis(std::shared_ptr<datastorage_interface> p_datast
             // store to redis
             std::cout << "Storing " + measurements->size() << " elements" << std::endl;
 
-            for(size_t adc = 0; adc < measurements->size(); adc++)
-            {
-                for(size_t channel = 0; channel < measurements.get()[adc].size(); channel++)
+                for(size_t channel = 0; channel < (measurements.get())->size(); channel++)
                 {
 
-                    //p_datastorage->store_measurement(adc, channel, (*measurements.get())[adc][channel]);
+                    //p_datastorage->store_measurement(0, channel, (*measurements.get())[adc][channel]);
                 }
-            }
 
         // we allow one second delay between measurement and viasualizing the data
         std::this_thread::sleep_for(std::chrono::milliseconds(5000));

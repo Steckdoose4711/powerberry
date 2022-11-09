@@ -15,9 +15,8 @@
 
 #include "filters/filter_interface.h"
 
-typedef std::shared_ptr<std::vector<measurement_t>> pSamples_t;
-typedef std::shared_ptr<std::vector<pSamples_t>> pChannels_Samples_t;
-typedef std::shared_ptr<std::vector<pChannels_Samples_t>> pADCs_Channels_Samples_t;
+typedef std::vector<measurement_t> Samples_t;
+typedef std::vector<std::shared_ptr<Samples_t>> Channel_Sample_t;
 
 
 class threadsafe_fifo
@@ -35,10 +34,22 @@ class threadsafe_fifo
          */
         threadsafe_fifo()
         {
-            m_p_channelVectors = std::make_shared<std::vector<pChannels_Samples_t>>();
+            m_p_channels = std::make_shared<Channel_Sample_t>();
 
         };
 
+    /*
+          Tfree complete memory which was occupied by this module
+         
+        ~threadsafe_fifo()
+        {
+            for(auto it = m_p_channels->begin(); it != m_p_channels->end(); it++)
+            {
+                delete &it;
+            }
+            delete m_p_channels;
+        }
+*/
         /**
          * Push a measurement for a device to the fifo
          * @param device_nr number of the measuring device
@@ -57,14 +68,14 @@ class threadsafe_fifo
          * Get all Measurements from the fifo
          * @return vector with all the measurements
          */
-        pADCs_Channels_Samples_t pop_all_measurements();
+         std::shared_ptr<Channel_Sample_t> pop_all_measurements();
 
 
     private:
 
-    pADCs_Channels_Samples_t m_p_channelVectors;
+    std::shared_ptr<Channel_Sample_t> m_p_channels;
     std::mutex m_mutex;
-    size_t m_max_size = 100000;
+    size_t m_max_measurements_per_channel = 100000;
 
 };
 

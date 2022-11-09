@@ -10,38 +10,47 @@
 int threadsafe_fifo::push(size_t device_nr, std::vector<measurement_t> & samples)
 {
     {
+        if(device_nr > 0)
+        {
+            throw std::runtime_error("[ERROR]: Only one ADC is supported at this time!");
+        }
+
         std::lock_guard<std::mutex> lock(m_mutex);
 
-        // add a vector with channels for each ADC
-        while((m_p_channelVectors.get())->size() <= device_nr)
+        // for each channel, add a vector for it's measurement
+        while(m_p_channels->size() <= samples.size())
         {
-            m_p_channelVectors->emplace_back(std::make_shared<std::vector<pSamples_t>>());
+            m_p_channels->emplace_back(std::make_shared<Samples_t>());
         }
 
-        // size of samples is equal to the channel number because samples contains one sample for each channel
-        auto nr_channels = samples.size();
 
-        // add a vector with samples for each channel
-        auto p_adc = (m_p_channelVectors.get())[device_nr];
-        while(p_adc.size() <= nr_channels)
+        bool max_size_reached = false;
+
+        // Check, if one of the vector already reached it's max values
+        /*
+        for(size_t channel = 0; channel < samples.size(); channel++)
         {
-            pSamples_t pSampleVec = std::make_shared<std::vector<measurement_t>>();
-            //p_adc.emplace_back(std::make_shared<std::vector<measurement_t>>());
+            if((m_p_channels.get())->at(channel)->size() >= m_max_measurements_per_channel)
+            {
+                max_size_reached = true;
+            }
         }
-/*
-
-        if((*m_channelVectors.get())[device_nr][samples.size()].size() >= m_max_size)
+*/
+        // do not add further values, if maximum size of the buffer is already reached
+        if(max_size_reached)
         {
             return -1;
         }
 
-        size_t cnt = 0;
-        for(auto it = samples.begin(); it != samples.end(); it++)
+        // add one sample for each channel
+        for(size_t channel = 0; channel < samples.size(); channel++)
         {
-            (*m_channelVectors.get())[device_nr][cnt].emplace_back(samples[cnt]);
-            cnt++;
+            measurement_t measurement = samples[channel];
+            auto channelValues = m_p_channels->at(channel);
+            channelValues->emplace_back(measurement);
         }
-*/
+
+        //success
         return 0;
     }
 }
@@ -54,7 +63,7 @@ size_t threadsafe_fifo::getFillLevel()
 }
 
 
-pADCs_Channels_Samples_t threadsafe_fifo::pop_all_measurements()
+std::shared_ptr<Channel_Sample_t> threadsafe_fifo::pop_all_measurements()
 {
     {
         std::lock_guard<std::mutex> lock(m_mutex);
