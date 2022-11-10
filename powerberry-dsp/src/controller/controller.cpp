@@ -54,6 +54,9 @@ void controller::start_DSP()
         std::chrono::duration<long, std::nano>  time_filter;
         std::chrono::duration<long, std::nano>  time_store;
 
+        size_t periode_time_ns = (1.0 / m_sampling_rate) * 1000000000;
+
+
         // do measurement for all ADCs
         for (auto const& adc : m_adc_list)
         {
@@ -120,7 +123,6 @@ void controller::start_DSP()
             std::cout << "-----------------------------------" << std::endl;
         #endif
         
-        size_t periode_time_ns = (1.0 / m_sampling_rate) * 1000000000;
         auto timeToWait = std::chrono::nanoseconds(periode_time_ns) - std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed_ms);
         if(timeToWait > std::chrono::milliseconds::zero())
         {
@@ -128,7 +130,8 @@ void controller::start_DSP()
         }
         else
         {
-            std::cerr << "[WARNING] to slow to process all samples" << std::endl;
+
+            std::cerr << "[WARNING]: to slow to process all samples! Needed: " << elapsed_ms.count() << "Milliseconds" << std::endl;
         }
     }
 }
@@ -154,11 +157,11 @@ static void TransferCacheToRedis(std::shared_ptr<datastorage_interface> p_datast
 
 
             // store to redis
-            std::cout << "Storing " + (measurements.get())->size() << " channels" << std::endl;
 
                 for(size_t channel = 0; channel < (measurements.get())->size(); channel++)
                 {
                     auto samples = *(measurements.get()->at(channel).get());
+                    std::cout << "Storing values for channel " + channel << std::endl;
                     p_datastorage->store_measurement(0, channel, samples);
                 }
 
