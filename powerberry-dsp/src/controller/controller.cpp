@@ -153,13 +153,22 @@ static void TransferCacheToRedis(std::shared_ptr<datastorage_interface> p_datast
             test = measurements.size();
         #endif
 
-
-
             // store to redis
+            int value_counter = 0;
                 for(size_t channel = 0; channel < (measurements.get())->size(); channel++)
                 {
                     auto samples = *(measurements.get()->at(channel).get());
-                    std::cout << "Storing values for channel " + channel << std::endl;
+                    if(channel == 0)
+                    {
+                        value_counter += samples.size();
+                    }
+                    if(value_counter >= 1000)
+                    {
+                        std::cout << "Pushed " << value_counter << " to channel 0" << std::endl;
+                        value_counter = 0;
+                    }
+
+                    //std::cout << "Storing values for channel " + channel << std::endl;
                     p_datastorage->store_measurement(0, channel, samples);
                 }
 
