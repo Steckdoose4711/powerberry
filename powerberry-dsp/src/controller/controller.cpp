@@ -95,9 +95,6 @@ void controller::start_DSP()
                 p_filtered_adc_values.emplace_back(m_p_filter->filter_values(*it)); // filter values for each channel
             }
 
-
-
-
             now1 = std::chrono::high_resolution_clock::now();
             time_filter = (now1 - now);
 
@@ -108,7 +105,6 @@ void controller::start_DSP()
 
             now = std::chrono::high_resolution_clock::now();
             time_store = (now - now1);
-
         }
 
         auto end = std::chrono::high_resolution_clock::now();
@@ -130,7 +126,6 @@ void controller::start_DSP()
         }
         else
         {
-
             std::cerr << "[WARNING]: to slow to process all samples! Needed: " << elapsed_ms.count() << "Milliseconds" << std::endl;
         }
     }

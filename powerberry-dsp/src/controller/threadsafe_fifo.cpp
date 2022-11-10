@@ -18,7 +18,7 @@ int threadsafe_fifo::push(size_t device_nr, std::vector<measurement_t> & samples
         std::lock_guard<std::mutex> lock(m_mutex);
 
         // for each channel, add a vector for it's measurement
-        while(m_p_channels->size() <= samples.size())
+        while(m_p_channels->size() < samples.size())
         {
             m_p_channels->emplace_back(std::make_shared<Samples_t>());
         }
