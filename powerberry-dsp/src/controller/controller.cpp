@@ -38,7 +38,7 @@ controller::controller( std::vector<std::shared_ptr<adc_interface>> adc_list,
 }
 
 
-void controller::start_DSP()
+void controller::start_DSP(size_t const supported_ADC_Channels)
 {
     // [warning] This is a fire & forget thread
     std::thread t1(TransferCacheToRedis, m_p_datastorage);
@@ -63,8 +63,12 @@ void controller::start_DSP()
             std::vector<std::vector<measurement_t>> raw_values;
             std::vector<measurement_t> p_filtered_adc_values;
 
-            // we need to know how much channel this adc has
             size_t number_channels = adc->get_number_channels();
+            // we need to know how much channel this adc has
+            if(number_channels > supported_ADC_Channels)
+            {
+                number_channels = supported_ADC_Channels;
+            }
 
             auto now1 = std::chrono::high_resolution_clock::now();
             time_alloc = (now1 - start);

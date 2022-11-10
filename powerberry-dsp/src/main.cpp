@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
                                                                                     json_config.getMeasurementRate_dsp(),
                                                                                     json_config.getSamplingRate_dsp());
 
-    controller_instance->start_DSP();
+    controller_instance->start_DSP(json_config.get_NrChannelsPerADC());
 
 
     std::cout << "[INFO]: Bye, Powerberry DSP is shutting down..." << std::endl;

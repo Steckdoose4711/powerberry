@@ -39,7 +39,7 @@ class controller
          * This function reads the ADC Samples for each channel and pushes the filtered values to Redis.
          * @return none
          */
-        void start_DSP();
+        void start_DSP(size_t const supported_ADC_Channels);
 
 
 
