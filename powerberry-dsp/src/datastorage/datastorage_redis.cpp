@@ -19,7 +19,7 @@
 
 datastorage_redis::datastorage_redis()
 {
-    datastorage_redis("tcp://powerberry-redis:6379", 1, 3, 100);
+    datastorage_redis("tcp://powerberry-redis:6379", 1, 8, 100);
 }
 
 
