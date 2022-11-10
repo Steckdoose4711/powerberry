@@ -161,6 +161,6 @@ static void TransferCacheToRedis(std::shared_ptr<datastorage_interface> p_datast
                 }
 
         // run task each 10 milliseconds to push data to redis
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
 }
