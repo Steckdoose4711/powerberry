@@ -156,7 +156,6 @@ static void TransferCacheToRedis(std::shared_ptr<datastorage_interface> p_datast
 
 
             // store to redis
-
                 for(size_t channel = 0; channel < (measurements.get())->size(); channel++)
                 {
                     auto samples = *(measurements.get()->at(channel).get());
@@ -165,6 +164,6 @@ static void TransferCacheToRedis(std::shared_ptr<datastorage_interface> p_datast
                 }
 
         // run task each 10 milliseconds to push data to redis
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
