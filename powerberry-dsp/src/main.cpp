@@ -8,6 +8,7 @@
 #include <InfluxDB.h>
 #include <influxdb_export.h>
 #include <InfluxDBException.h>
+#include <random>
 
 #include "adc/adc_interface.h"
 #include "adc/adc_dummy.h"
@@ -66,11 +67,27 @@ int main(int argc, char *argv[])
     // Try to write something into the influx db
     cout << "Adding influx value to database" << std::endl;
 
+ std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist6(1,6); // distribution in range [1, 6]
+    int val = 0;
     auto influxdb = influxdb::InfluxDBFactory::Get("http://localhost:8086?db=db_powerberry");
     influxdb->write(influxdb::Point{"current"}
   .addField("value", 10.2)
   .addTag("phase", "0")
 );
+
+
+    for(int i = 0; i < 10000; i++)
+    {
+        val = ((val + 1) % 50);
+    influxdb->write(influxdb::Point{"current"}
+  .addField("value", (float)val)
+  .addTag("phase", "0")
+);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+  }
 /*
     // SPI and ADC
     // at the moment, only one ADC is allowed
