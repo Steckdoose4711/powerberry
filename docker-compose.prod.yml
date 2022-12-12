@@ -6,6 +6,8 @@ services:
       file: docker-compose.base.yml
       service: powerberry-app
     build: ./powerberry-app
+#    entrypoint: tail
+#    command: ["-f", "/dev/null"]
 
   powerberry-dsp:
     extends:
@@ -19,3 +21,5 @@ services:
     extends:
       file: docker-compose.base.yml
       service: powerberry-redis
+    ports:
+      - "6379:6379"

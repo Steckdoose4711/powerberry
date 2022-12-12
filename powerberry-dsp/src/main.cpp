@@ -5,6 +5,10 @@
 #include <sw/redis++/redis++.h>
 #include <bcm2835.h>
 #include <memory>
+#include "InfluxDBFactory.h"
+#include "InfluxDB.h"
+#include "influxdb_export.h"
+#include "InfluxDBException.h"
 
 #include "adc/adc_interface.h"
 #include "adc/adc_dummy.h"
@@ -57,6 +61,15 @@ int main(int argc, char *argv[])
 
     // Creating instances of the needed DSP Blocks for real ADC
     config_Manager json_config(config_file_path);
+
+
+    // Try to write something into the influx db
+    /*
+    auto influxdb = influxdb::InfluxDBFactory::Get("http://localhost:8086?db=db_powerberry");
+    influxdb->write(influxdb::Point{"current"}
+  .addField("value", 10.2)
+  .addTag("phase", "0")
+);*/
 
 
 

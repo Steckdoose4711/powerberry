@@ -6,6 +6,6 @@
   "dsp_adc_reference_voltage_V" : "4.8",
   "dsp_filter_type" : "median",
   "dsp_measurement_rate" : "3",
-  "dsp_sampling_rate" : "1000",
+  "dsp_sampling_rate" : "500",
   "app_voltage_reference" : "230"
 }

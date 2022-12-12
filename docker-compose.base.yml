@@ -23,7 +23,7 @@ services:
       CONFIG_PATH: /config/config.json
       REDIS_HOST: powerberry-redis
       REDIS_PORT: 6379
-      EMULATE_HARDWARE: emu_hw_false
+      EMULATE_HARDWARE: emu_hw_true
 
   # redis is used as an in-memory store between the two
   powerberry-redis:

@@ -3,7 +3,7 @@
     {
       "type": "shell",
       "label": "C/C++: g++ build active file",
-      "command": "make",
+      "command": "make -j 4",
       "problemMatcher": ["$gcc"],
       "group": {
         "kind": "build",

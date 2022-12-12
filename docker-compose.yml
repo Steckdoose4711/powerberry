@@ -1,47 +1,30 @@
-x-description: "local development environment, with built images from sources"
-version: "2.4"
-services:
-  powerberry-app:
-    extends:
-      file: docker-compose.base.yml
-      service: powerberry-app
-    build: ./powerberry-app
-    volumes:
-      - ./powerberry-app:/app
+influxdb:
+  image: influxdb:1.8.10
+  restart: always
+  container_name: influxdb
+  ports:
+    - "8083:8083"
+    - "8086:8086"
+    - "8090:8090"
+  env_file:
+    - 'env.influxdb'
+  volumes:
+    # Data persistency
+    # sudo mkdir -p /srv/docker/influxdb/data
+    - /home/pi/docker/influxdb/data:/var/lib/influxdb
 
-  powerberry-dsp:
-    extends:
-      file: docker-compose.base.yml
-      service: powerberry-dsp
-    build:
-      context: ./powerberry-dsp
-      target: dev
-      args:
-        IGNORE_ERRORS: 1
-    volumes:
-      - ./powerberry-dsp:/app
-    environment:
-      EMULATE_HARDWARE: emu_hw_true
-
-  powerberry-redis:
-    extends:
-      file: docker-compose.base.yml
-      service: powerberry-redis
-
-  powerberry-influx:
-    container_name: powerberry-influxdb
-    image: influxdb:1.8.10
-    restart: always
-    ports:
-      - "8086:8086"
-    volumes:
-      - ./data/influxdb:/var/lib/influxdb
-
-  powerberry-grafana:
-    container_name: powerberry-grafana
-    image: grafana/grafana:8.4.6
-    restart: always
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./data/grafana:/var/lib/grafana
+grafana:
+  image: grafana/grafana:8.4.6
+  restart: always
+  container_name: grafana
+  ports:
+    - "3000:3000"
+  env_file:
+    - 'env.grafana'
+  user: "0"
+  links:
+    - influxdb
+  volumes:
+    # Data persistency
+    # sudo mkdir -p /srv/docker/grafana/data; chown 472:472 /srv/docker/grafana/data
+    - /home/pi/docker/grafana:/var/lib/grafana
