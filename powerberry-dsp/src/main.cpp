@@ -2,13 +2,12 @@
 #include <fstream>
 #include <chrono>
 #include <thread>
-#include <sw/redis++/redis++.h>
 #include <bcm2835.h>
 #include <memory>
-#include "InfluxDBFactory.h"
-#include "InfluxDB.h"
-#include "influxdb_export.h"
-#include "InfluxDBException.h"
+#include <InfluxDBFactory.h>
+#include <InfluxDB.h>
+#include <influxdb_export.h>
+#include <InfluxDBException.h>
 
 #include "adc/adc_interface.h"
 #include "adc/adc_dummy.h"
@@ -20,11 +19,12 @@
 #include "filters/filter_mean.h"
 
 #include "datastorage/datastorage_interface.h"
-#include "datastorage/datastorage_redis.h"
+//#include "datastorage/datastorage_redis.h"
 #include "controller/controller.h"
 
+
 using namespace std;
-using namespace sw::redis;
+//using namespace sw::redis;
 
 #define ADC0_Chipselect RPI_V2_GPIO_P1_24
 
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 {
 
     std::cout << "[INFO]: Hey, Powerberry DSP is up and running." << std::endl;
-
+/*
     std::string config_file_path = "/config/config.json";
     auto env_config_file_path = std::getenv("CONFIG_PATH");
     auto env_redis_host = std::getenv("REDIS_HOST");
@@ -61,18 +61,17 @@ int main(int argc, char *argv[])
 
     // Creating instances of the needed DSP Blocks for real ADC
     config_Manager json_config(config_file_path);
-
+*/
 
     // Try to write something into the influx db
-    /*
+    cout << "Adding influx value to database" << std::endl;
+
     auto influxdb = influxdb::InfluxDBFactory::Get("http://localhost:8086?db=db_powerberry");
     influxdb->write(influxdb::Point{"current"}
   .addField("value", 10.2)
   .addTag("phase", "0")
-);*/
-
-
-
+);
+/*
     // SPI and ADC
     // at the moment, only one ADC is allowed
     if(json_config.get_NrADCdevices() > 1) throw std::runtime_error("Only one ADC device is allowed at the moment. Extend config file within an array of chipselect pins to allow more than one ADC device.");
@@ -138,8 +137,8 @@ int main(int argc, char *argv[])
                                                                                     json_config.getMeasurementRate_dsp(),
                                                                                     json_config.getSamplingRate_dsp());
 
-    controller_instance->start_DSP(json_config.get_NrChannelsPerADC());
-
+    //controller_instance->start_DSP(json_config.get_NrChannelsPerADC());
+*/
 
     std::cout << "[INFO]: Bye, Powerberry DSP is shutting down..." << std::endl;
 
