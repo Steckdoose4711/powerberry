@@ -1,0 +1,6 @@
+ADC		Raspberry
+-----------------------------
+13Clk -> 	GPIO11 (PIN23)
+12Dout -> 	GPIO9 (Pin21)
+11Din -> 	GPPIO10 (Pin 19)
+10CS -> 	GPIO (Pin24)
